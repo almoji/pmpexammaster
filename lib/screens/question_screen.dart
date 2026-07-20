@@ -130,6 +130,8 @@ finishExam();
       practiceFilter: widget.practiceFilter,
     );
 
+    debugPrint("Questions loaded: ${questions.length}");
+
     setState(() {
 
       _questions = questions

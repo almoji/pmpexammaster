@@ -37,19 +37,38 @@ class QuestionService {
 
       else if (practiceFilter.mode == "By Difficulty") {
 
+        String difficulty = practiceFilter.difficulty;
+
+        if (difficulty == "Moderate") {
+          difficulty = "Medium";
+        } else if (difficulty == "Difficult") {
+          difficulty = "Hard";
+        }
+
         filteredData = data.where((question) {
 
-          return question["difficulty"] == practiceFilter.difficulty;
+
+          return question["difficulty"] == difficulty;
 
         }).toList();
+
+
 
       }
 
       else if (practiceFilter.mode == "By Question Type") {
 
+        String questionType = practiceFilter.questionType;
+
+        if (questionType == "Multiple Choice") {
+          questionType = "Knowledge";
+        } else if (questionType == "Multiple Response") {
+          questionType = "Situational";
+        }
+
         filteredData = data.where((question) {
 
-          return question["type"] == practiceFilter.questionType;
+          return question["type"] == questionType;
 
         }).toList();
 
