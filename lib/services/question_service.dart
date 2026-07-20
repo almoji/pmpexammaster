@@ -23,14 +23,27 @@ class QuestionService {
 
     List<dynamic> filteredData = data;
 
-    if (practiceFilter != null &&
-        practiceFilter.mode == "By Domain") {
+    if (practiceFilter != null) {
 
-      filteredData = data.where((question) {
+      if (practiceFilter.mode == "By Domain") {
 
-        return question["domain"] == practiceFilter.domain;
+        filteredData = data.where((question) {
 
-      }).toList();
+          return question["domain"] == practiceFilter.domain;
+
+        }).toList();
+
+      }
+
+      else if (practiceFilter.mode == "By Difficulty") {
+
+        filteredData = data.where((question) {
+
+          return question["difficulty"] == practiceFilter.difficulty;
+
+        }).toList();
+
+      }
 
     }
 
