@@ -45,6 +45,16 @@ class QuestionService {
 
       }
 
+      else if (practiceFilter.mode == "By Question Type") {
+
+        filteredData = data.where((question) {
+
+          return question["type"] == practiceFilter.questionType;
+
+        }).toList();
+
+      }
+
     }
 
     filteredData.shuffle();
