@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "domain": "People",
+    "difficulty": "Medium",
+    "type": "Situational",
+    "question": "A project manager discovers that a key stakeholder was not identified during project initiation. What should the project manager do first?",
+    "optionA": "Update the stakeholder register",
+    "optionB": "Submit a change request",
+    "optionC": "Inform the project sponsor",
+    "optionD": "Stop the project activities",
+    "correctAnswer": "A",
+    "explanation": "The stakeholder register should be updated when new stakeholders are identified."
+  },
+  {
+    "id": 2,
+    "domain": "Process",
+    "difficulty": "Hard",
+    "type": "Situational",
+    "question": "A team member reports a risk that was not identified during planning. What should the project manager do first?",
+    "optionA": "Ignore the risk until it happens",
+    "optionB": "Update the risk register",
+    "optionC": "Escalate immediately to the sponsor",
+    "optionD": "Create a new project",
+    "correctAnswer": "B",
+    "explanation": "Newly identified risks should first be documented in the risk register."
+  },
+  {
+    "id": 3,
+    "domain": "Business Environment",
+    "difficulty": "Easy",
+    "type": "Knowledge",
+    "question": "A customer requests a change to the project scope. What should the project manager do first?",
+    "optionA": "Implement the change immediately",
+    "optionB": "Reject the request",
+    "optionC": "Evaluate the impact of the change",
+    "optionD": "Ask the team to work overtime",
+    "correctAnswer": "C",
+    "explanation": "Changes should be assessed for impact before approval or implementation."
+  }
+]
