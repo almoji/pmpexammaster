@@ -208,13 +208,20 @@ finishExam();
 
     final question = _questions[_currentQuestionIndex];
 
+    final selectedAnswers = _selectedAnswers
+        .map((e) => e.trim().toUpperCase())
+        .toSet();
+
+    final correctAnswers = question.correctAnswers
+        .map((e) => e.trim().toUpperCase())
+        .toSet();
+
+    final isCorrect =
+        selectedAnswers.length == correctAnswers.length &&
+            selectedAnswers.containsAll(correctAnswers);
 
 
-
-    if (_selectedAnswers.isNotEmpty &&
-        question.correctAnswers.contains(
-          _selectedAnswers.first.trim().toUpperCase(),
-        )) {
+    if (isCorrect) {
 
       setState(() {
 
@@ -624,15 +631,36 @@ finishExam();
 
           setState(() {
 
-            _selectedAnswer = letter;
+            if (question.questionFormat == "singleChoice") {
 
-            _selectedAnswers
-              ..clear()
-              ..add(letter);
+              _selectedAnswer = letter;
 
-            _userAnswers[
-            question.id
-            ] = letter;
+              _selectedAnswers
+                ..clear()
+                ..add(letter);
+
+              _userAnswers[question.id] = letter;
+
+            } else {
+
+              if (_selectedAnswers.contains(letter)) {
+
+                _selectedAnswers.remove(letter);
+
+              } else {
+
+                _selectedAnswers.add(letter);
+
+              }
+
+              _selectedAnswer =
+              _selectedAnswers.isEmpty
+                  ? null
+                  : _selectedAnswers.first;
+
+              _userAnswers[question.id] = _selectedAnswer ?? "";
+
+            }
 
           });
 
@@ -871,8 +899,14 @@ finishExam();
 
                   child: ElevatedButton(
 
-                    onPressed:
-                    _answered ? null : checkAnswer,
+                    onPressed: _answered
+                        ? null
+                        : (_selectedAnswers.length ==
+                        _questions[_currentQuestionIndex]
+                            .correctAnswers
+                            .length
+                        ? checkAnswer
+                        : null),
 
                     child: const Text(
                       "CHECK ANSWER",

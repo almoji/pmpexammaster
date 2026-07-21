@@ -4,7 +4,7 @@
     "domain": "People",
     "difficulty": "Medium",
     "type": "Situational",
-    "questionFormat": "multipleChoice",
+    "questionFormat": "singleChoice",
     "question": "A project manager discovers that a key stakeholder was not identified during project initiation. What should the project manager do first?",
     "optionA": "Update the stakeholder register",
     "optionB": "Submit a change request",
@@ -18,6 +18,7 @@
     "domain": "Process",
     "difficulty": "Hard",
     "type": "Situational",
+    "questionFormat": "singleChoice",
     "question": "A team member reports a risk that was not identified during planning. What should the project manager do first?",
     "optionA": "Ignore the risk until it happens",
     "optionB": "Update the risk register",
@@ -31,6 +32,7 @@
     "domain": "Business Environment",
     "difficulty": "Easy",
     "type": "Knowledge",
+    "questionFormat": "singleChoice",
     "question": "A customer requests a change to the project scope. What should the project manager do first?",
     "optionA": "Implement the change immediately",
     "optionB": "Reject the request",
@@ -38,5 +40,37 @@
     "optionD": "Ask the team to work overtime",
     "correctAnswer": "C",
     "explanation": "Changes should be assessed for impact before approval or implementation."
+  },
+  {
+    "id": 9991,
+    "domain": "People",
+    "difficulty": "Easy",
+    "type": "Knowledge",
+    "questionFormat": "multipleChoice",
+    "question": "TEST - Select TWO answers.",
+    "optionA": "Answer A",
+    "optionB": "Answer B",
+    "optionC": "Answer C",
+    "optionD": "Answer D",
+    "correctAnswer": "A",
+    "correctAnswers": ["A", "C"],
+    "explanation": "Correct answers are A and C."
+  },
+  {
+    "id": 9992,
+    "domain": "People",
+    "difficulty": "Easy",
+    "type": "Knowledge",
+    "questionFormat": "multipleChoice",
+    "question": "TEST - Select THREE answers.",
+    "optionA": "Answer A",
+    "optionB": "Answer B",
+    "optionC": "Answer C",
+    "optionD": "Answer D",
+    "correctAnswer": "A",
+    "correctAnswers": ["A", "B", "D"],
+    "explanation": "Correct answers are A, B and D."
   }
+
+
 ]
