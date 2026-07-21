@@ -524,9 +524,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child:
                   _infoCard(
 
-                    "📚 Exams",
+                    "✅ Correct",
 
-                    "${results.length}",
+                    "$attemptsCorrect",
 
                   ),
                 ),
@@ -539,9 +539,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child:
                   _infoCard(
 
-                    "📈 Average",
+                    "❌ Incorrect",
 
-                    "${averageScore.round()}%",
+                    "$attemptsIncorrect",
 
                   ),
                 ),
