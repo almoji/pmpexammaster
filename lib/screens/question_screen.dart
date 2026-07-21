@@ -349,8 +349,9 @@ finishExam();
       );
 
       if (answer != null &&
-          answer.trim().toUpperCase() ==
-              q.correctAnswer.trim().toUpperCase()) {
+          q.correctAnswers.contains(
+            answer.trim().toUpperCase(),
+          )) {
 
         correct++;
 
@@ -397,8 +398,9 @@ finishExam();
 
 
         if (answer != null &&
-            q.correctAnswer.trim().toUpperCase() ==
-                answer.trim().toUpperCase()) {
+            q.correctAnswers.contains(
+              answer.trim().toUpperCase(),
+            )) {
 
           correct++;
 
