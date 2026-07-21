@@ -114,58 +114,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   int get totalQuestionsAnswered {
 
-    if(results.isEmpty) {
-      return 0;
-    }
-
-    return results.fold<int>(
-        0,
-            (sum, item) =>
-        sum + item.totalQuestions
-    );
+    return attempts.length;
 
   }
 
 
   int get totalCorrectAnswers {
 
-    if(results.isEmpty) {
-      return 0;
-    }
-
-    return results.fold<int>(
-        0,
-            (sum, item) =>
-        sum + item.correctAnswers
-    );
+    return attemptsCorrect;
 
   }
 
 
   int get totalIncorrectAnswers {
 
-    if(results.isEmpty) {
-      return 0;
-    }
-
-    return results.fold<int>(
-        0,
-            (sum, item) =>
-        sum + item.incorrectAnswers
-    );
+    return attemptsIncorrect;
 
   }
 
 
   double get globalAccuracy {
 
-    if(totalQuestionsAnswered == 0) {
+    if (attempts.isEmpty) {
       return 0;
     }
 
-    return
-      (totalCorrectAnswers /
-          totalQuestionsAnswered) * 100;
+    return (attemptsCorrect / attempts.length) * 100;
 
   }
 
