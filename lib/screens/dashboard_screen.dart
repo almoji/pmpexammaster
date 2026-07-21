@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../services/history_service.dart';
 import '../models/exam_result.dart';
 import '../models/domain_result.dart';
-
+import '../models/question_attempt.dart';
+import '../services/question_attempt_service.dart';
 
 class DashboardScreen extends StatefulWidget {
 
@@ -23,10 +24,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final HistoryService _historyService =
   HistoryService();
-
+  final QuestionAttemptService _questionAttemptService =
+  QuestionAttemptService();
 
   List<ExamResult> results = [];
-
+  List<QuestionAttempt> attempts = [];
 
   bool loading = true;
 
@@ -49,13 +51,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final data =
     await _historyService.getResults();
 
+    final questionAttempts =
+    await _questionAttemptService.getAttempts();
+
 
     setState(() {
-
       results = data;
-
+      attempts = questionAttempts;
       loading = false;
-
     });
 
   }
