@@ -136,6 +136,7 @@ finishExam();
 
   Future<void> loadQuestions() async {
 
+
     final questions = await _questionService.loadQuestions(
       practiceFilter: widget.practiceFilter,
     );
@@ -174,7 +175,24 @@ finishExam();
 
     });
 
+    await _loadFavoriteStatus();
   }
+  Future<void> _loadFavoriteStatus() async {
+    if (_questions.isEmpty) return;
+
+    final favorites = await _favoriteQuestionsService.getQuestions();
+
+    final currentQuestion = _questions[_currentQuestionIndex];
+
+    final isFavorite = favorites.any((q) => q.id == currentQuestion.id);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isFavorite = isFavorite;
+    });
+  }
+
 
   Future<void> checkAnswer() async {
 
@@ -255,47 +273,45 @@ finishExam();
     if (_currentQuestionIndex > 0) {
 
       setState(() {
-
         _currentQuestionIndex--;
 
+        _isFavorite = false;
+
         _selectedAnswer =
-        _userAnswers[
-        _questions[_currentQuestionIndex].id
-        ];
+        _userAnswers[_questions[_currentQuestionIndex].id];
 
         _resultMessage = null;
 
         _answered = _answeredQuestions.contains(
-            _questions[_currentQuestionIndex].id
-        );
-
+            _questions[_currentQuestionIndex].id);
       });
+
+      _loadFavoriteStatus();
 
     }
 
   }
 
 
-  void nextQuestion() {
+  Future<void> nextQuestion() async {
 
     if (_currentQuestionIndex < _questions.length - 1) {
 
       setState(() {
-
         _currentQuestionIndex++;
 
+        _isFavorite = false;
+
         _selectedAnswer =
-        _userAnswers[
-        _questions[_currentQuestionIndex].id
-        ];
+        _userAnswers[_questions[_currentQuestionIndex].id];
 
         _resultMessage = null;
 
         _answered = _answeredQuestions.contains(
-            _questions[_currentQuestionIndex].id
-        );
-
+            _questions[_currentQuestionIndex].id);
       });
+
+      await _loadFavoriteStatus();
 
     }
 

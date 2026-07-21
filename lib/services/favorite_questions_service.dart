@@ -39,9 +39,13 @@ class FavoriteQuestionsService {
     }
 
 
-    return jsonList
+    final questions = jsonList
         .map((item) => Question.fromJson(jsonDecode(item)))
         .toList();
+
+    print("FAVORITES IDs: ${questions.map((q) => q.id).toList()}");
+
+    return questions;
   }
 
   Future<void> removeQuestion(int id) async {
