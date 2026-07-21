@@ -136,6 +136,11 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
                     child: Text("Incorrect Questions ⭐"),
                   ),
 
+                  DropdownMenuItem(
+                    value: "Favorite Questions",
+                    child: Text("Favorite Questions ❤️"),
+                  ),
+
                 ],
 
                 onChanged: (value) {
