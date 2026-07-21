@@ -7,26 +7,43 @@ import '../models/question_attempt.dart';
 class QuestionAttemptService {
   static const String _storageKey = 'question_attempts';
 
-  final List<QuestionAttempt> _attempts = [];
 
-  List<QuestionAttempt> get attempts => List.unmodifiable(_attempts);
 
   Future<void> addAttempt(QuestionAttempt attempt) async {
-    _attempts.add(attempt);
-    await saveAttempts();
+    final attempts = await getAttempts();
+
+    attempts.add(attempt);
+
+    await saveAttempts(attempts);
   }
 
-  Future<void> saveAttempts() async {
+  Future<void> saveAttempts(List<QuestionAttempt> attempts) async {
     final prefs = await SharedPreferences.getInstance();
 
-    final jsonList = _attempts
+    final jsonList = attempts
         .map((attempt) => jsonEncode(attempt.toJson()))
         .toList();
 
     await prefs.setStringList(_storageKey, jsonList);
   }
 
-  void clear() {
-    _attempts.clear();
+  Future<List<QuestionAttempt>> getAttempts() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final jsonList = prefs.getStringList(_storageKey);
+
+    if (jsonList == null) {
+      return [];
+    }
+
+    return jsonList
+        .map((item) => QuestionAttempt.fromJson(jsonDecode(item)))
+        .toList();
   }
+
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_storageKey);
+  }
+
 }
