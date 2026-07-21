@@ -11,6 +11,9 @@ import 'result_screen.dart';
 import 'exam_review_screen.dart';
 import '../services/incorrect_questions_service.dart';
 import '../services/favorite_questions_service.dart';
+import '../services/question_attempt_service.dart';
+import '../models/question_attempt.dart';
+import '../models/exam_mode.dart';
 
 class QuestionScreen extends StatefulWidget {
 
@@ -50,6 +53,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   final IncorrectQuestionsService _incorrectQuestionsService =
   IncorrectQuestionsService();
+
+  final QuestionAttemptService _questionAttemptService =
+  QuestionAttemptService();
 
   List<Question> _questions = [];
 
@@ -225,6 +231,17 @@ finishExam();
     final isCorrect =
         selectedAnswers.length == correctAnswers.length &&
             selectedAnswers.containsAll(correctAnswers);
+
+    final attempt = QuestionAttempt(
+      questionId: question.id,
+      timestamp: DateTime.now(),
+      correct: isCorrect,
+      selectedAnswers: List.from(_selectedAnswers),
+      elapsedSeconds: elapsedSeconds,
+      mode: ExamMode.practice,
+    );
+
+    await _questionAttemptService.addAttempt(attempt);
 
 
     if (isCorrect) {
