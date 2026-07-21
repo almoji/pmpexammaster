@@ -208,8 +208,9 @@ finishExam();
 
 
 
-    if (_selectedAnswer!.trim().toUpperCase() ==
-        question.correctAnswer.trim().toUpperCase()) {
+    if (question.correctAnswers.contains(
+      _selectedAnswer!.trim().toUpperCase(),
+    )) {
 
       setState(() {
 
