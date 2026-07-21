@@ -4,14 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/question.dart';
 
-import 'package:flutter/foundation.dart';
 
 class IncorrectQuestionsService {
   static const String _key = "incorrect_questions";
 
   Future<void> saveQuestion(Question question) async {
 
-    debugPrint("Saving incorrect question: ${question.id}");
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -40,7 +38,6 @@ class IncorrectQuestionsService {
       return [];
     }
 
-    debugPrint("Incorrect questions stored: ${jsonList.length}");
 
     return jsonList
         .map((item) => Question.fromJson(jsonDecode(item)))

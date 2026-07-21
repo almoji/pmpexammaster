@@ -134,13 +134,31 @@ finishExam();
       practiceFilter: widget.practiceFilter,
     );
 
-    debugPrint("Questions loaded: ${questions.length}");
+    if (questions.isEmpty) {
 
-    for (final q in questions) {
-      debugPrint(
-          "ID: ${q.id} | ${q.question.substring(0, 30)}..."
-      );
+      if (mounted) {
+
+        ScaffoldMessenger.of(context).showSnackBar(
+
+          const SnackBar(
+
+            content: Text(
+              "🎉 Great job! You don't have any incorrect questions to review.",
+            ),
+
+          ),
+
+        );
+
+        Navigator.pop(context);
+
+      }
+
+      return;
+
     }
+
+
 
     setState(() {
 

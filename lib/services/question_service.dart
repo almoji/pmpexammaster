@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import '../models/question.dart';
 import '../models/practice_filter.dart';
 import 'incorrect_questions_service.dart';
-import 'package:flutter/foundation.dart';
+
 
 
 class QuestionService {
@@ -17,8 +17,6 @@ class QuestionService {
     PracticeFilter? practiceFilter,
   }) async {
 
-    debugPrint("========== QUESTION SERVICE ==========");
-    debugPrint("Mode: ${practiceFilter?.mode}");
 
     final String response = await rootBundle.loadString(
       'lib/data/questions.json',
@@ -27,8 +25,7 @@ class QuestionService {
     final List<dynamic> data = json.decode(response);
 
     if (practiceFilter?.mode == "Incorrect Questions") {
-      debugPrint("Loading incorrect questions...");
-      return await _incorrectQuestionsService.getQuestions();
+       return await _incorrectQuestionsService.getQuestions();
     }
 
     List<dynamic> filteredData = data;
