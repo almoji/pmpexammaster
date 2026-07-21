@@ -38,7 +38,6 @@ class Question {
     required this.difficulty,
 
     required this.type,
-
     required this.questionFormat,
 
     required this.question,

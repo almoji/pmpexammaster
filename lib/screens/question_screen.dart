@@ -59,6 +59,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   String? _selectedAnswer;
 
+  final Set<String> _selectedAnswers = {};
+
   String? _resultMessage;
 
   bool _answered = false;
@@ -551,12 +553,12 @@ finishExam();
     final question = _questions[_currentQuestionIndex];
 
 
-    final bool isSelected = _selectedAnswer == letter;
+    final bool isSelected = _selectedAnswers.contains(letter);
 
 
-    final bool isCorrect =
-        question.correctAnswer.trim().toUpperCase() ==
-            letter.trim().toUpperCase();
+    final bool isCorrect = question.correctAnswers.contains(
+      letter.trim().toUpperCase(),
+    );
 
 
     Color buttonColor = Colors.grey.shade200;
@@ -608,6 +610,10 @@ finishExam();
           setState(() {
 
             _selectedAnswer = letter;
+
+            _selectedAnswers
+              ..clear()
+              ..add(letter);
 
             _userAnswers[
             question.id
@@ -788,7 +794,7 @@ finishExam();
 
 
                 Text(
-                  "Type: ${_questions[_currentQuestionIndex].type}",
+                  "Format: ${_questions[_currentQuestionIndex].questionFormat}",
                 ),
 
               ],

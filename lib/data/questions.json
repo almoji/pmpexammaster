@@ -4,6 +4,7 @@
     "domain": "People",
     "difficulty": "Medium",
     "type": "Situational",
+    "questionFormat": "multipleChoice",
     "question": "A project manager discovers that a key stakeholder was not identified during project initiation. What should the project manager do first?",
     "optionA": "Update the stakeholder register",
     "optionB": "Submit a change request",
