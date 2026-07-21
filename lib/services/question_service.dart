@@ -96,29 +96,18 @@ class QuestionService {
     return filteredData.map((json) {
 
       return Question(
-
         id: json['id'],
-
         domain: json['domain'],
-
         difficulty: json['difficulty'],
-
         type: json['type'],
-
+        questionFormat: json['questionFormat'] ?? 'singleChoice',
         question: json['question'],
-
         optionA: json['optionA'],
-
         optionB: json['optionB'],
-
         optionC: json['optionC'],
-
         optionD: json['optionD'],
-
         correctAnswer: json['correctAnswer'],
-
         explanation: json['explanation'],
-
       );
 
     }).toList();

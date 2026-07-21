@@ -8,6 +8,8 @@ class Question {
 
   final String type;
 
+  final String questionFormat;
+
   final String question;
 
   final String optionA;
@@ -35,6 +37,8 @@ class Question {
 
     required this.type,
 
+    required this.questionFormat,
+
     required this.question,
 
     required this.optionA,
@@ -59,6 +63,7 @@ class Question {
       'domain': domain,
       'difficulty': difficulty,
       'type': type,
+      'questionFormat': questionFormat,
       'question': question,
       'optionA': optionA,
       'optionB': optionB,
@@ -76,6 +81,7 @@ class Question {
       domain: json['domain'],
       difficulty: json['difficulty'],
       type: json['type'],
+      questionFormat: json['questionFormat'] ?? 'singleChoice',
       question: json['question'],
       optionA: json['optionA'],
       optionB: json['optionB'],

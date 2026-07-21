@@ -237,6 +237,7 @@ finishExam();
             domain: question.domain,
             difficulty: question.difficulty,
             type: question.type,
+            questionFormat: question.questionFormat,
             question: question.question,
             optionA: question.optionA,
             optionB: question.optionB,
