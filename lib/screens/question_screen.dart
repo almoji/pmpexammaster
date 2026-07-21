@@ -206,6 +206,14 @@ finishExam();
 
     final question = _questions[_currentQuestionIndex];
 
+    final elapsedSeconds = _questionStartTime == null
+        ? 0
+        : DateTime.now()
+        .difference(_questionStartTime!)
+        .inSeconds;
+
+    assert(elapsedSeconds >= 0);
+
     final selectedAnswers = _selectedAnswers
         .map((e) => e.trim().toUpperCase())
         .toSet();
