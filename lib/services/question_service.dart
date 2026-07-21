@@ -107,6 +107,9 @@ class QuestionService {
         optionC: json['optionC'],
         optionD: json['optionD'],
         correctAnswer: json['correctAnswer'],
+        correctAnswers: json['correctAnswers'] != null
+            ? List<String>.from(json['correctAnswers'])
+            : [json['correctAnswer']],
         explanation: json['explanation'],
       );
 

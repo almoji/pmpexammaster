@@ -22,6 +22,8 @@ class Question {
 
   final String correctAnswer;
 
+  final List<String> correctAnswers;
+
   final String explanation;
 
   String? userAnswer;
@@ -51,6 +53,8 @@ class Question {
 
     required this.correctAnswer,
 
+    required this.correctAnswers,
+
     required this.explanation,
 
     this.userAnswer,
@@ -70,6 +74,7 @@ class Question {
       'optionC': optionC,
       'optionD': optionD,
       'correctAnswer': correctAnswer,
+      'correctAnswers': correctAnswers,
       'explanation': explanation,
       'userAnswer': userAnswer,
     };
@@ -88,6 +93,9 @@ class Question {
       optionC: json['optionC'],
       optionD: json['optionD'],
       correctAnswer: json['correctAnswer'],
+      correctAnswers: json['correctAnswers'] != null
+          ? List<String>.from(json['correctAnswers'])
+          : [json['correctAnswer']],
       explanation: json['explanation'],
       userAnswer: json['userAnswer'],
     );

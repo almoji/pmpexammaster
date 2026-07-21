@@ -244,6 +244,7 @@ finishExam();
             optionC: question.optionC,
             optionD: question.optionD,
             correctAnswer: question.correctAnswer,
+            correctAnswers: question.correctAnswers,
             explanation: question.explanation,
             userAnswer: _selectedAnswer,
           ),
