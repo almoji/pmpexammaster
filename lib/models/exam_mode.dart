@@ -1,0 +1,4 @@
+enum ExamMode {
+  practice,
+  mock,
+}
