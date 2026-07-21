@@ -286,6 +286,12 @@ finishExam();
         _selectedAnswer =
         _userAnswers[_questions[_currentQuestionIndex].id];
 
+        _selectedAnswers.clear();
+
+        if (_selectedAnswer != null) {
+          _selectedAnswers.add(_selectedAnswer!);
+        }
+
         _resultMessage = null;
 
         _answered = _answeredQuestions.contains(
@@ -310,6 +316,12 @@ finishExam();
 
         _selectedAnswer =
         _userAnswers[_questions[_currentQuestionIndex].id];
+
+        _selectedAnswers.clear();
+
+        if (_selectedAnswer != null) {
+          _selectedAnswers.add(_selectedAnswer!);
+        }
 
         _resultMessage = null;
 
