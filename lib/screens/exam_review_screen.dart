@@ -4,7 +4,7 @@ class ExamReviewScreen extends StatelessWidget {
 
   final int totalQuestions;
 
-  final Map<int, String> userAnswers;
+  final Map<int, Set<String>> userAnswers;
 
   final VoidCallback onSubmit;
 
@@ -96,7 +96,7 @@ class ExamReviewScreen extends StatelessWidget {
 
                             ? "Not answered"
 
-                            : "Answer: $answer",
+                            : "Answer: ${answer.join(", ")}",
 
                       ),
 

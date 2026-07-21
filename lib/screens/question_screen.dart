@@ -57,7 +57,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   bool _isFavorite = false;
 
-  String? _selectedAnswer;
 
   final Set<String> _selectedAnswers = {};
 
@@ -70,7 +69,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   final List<Question> _incorrectQuestions = [];
 
-  final Map<int, String> _userAnswers = {};
+  final Map<int, Set<String>> _userAnswers = {};
 
   final Set<int> _answeredQuestions = {};
 
@@ -199,10 +198,8 @@ finishExam();
 
   Future<void> checkAnswer() async {
 
-    if (_selectedAnswer == null) {
-
+    if (_selectedAnswers.isEmpty) {
       return;
-
     }
 
 
@@ -291,13 +288,13 @@ finishExam();
 
         _isFavorite = false;
 
-        _selectedAnswer =
-        _userAnswers[_questions[_currentQuestionIndex].id];
-
         _selectedAnswers.clear();
 
-        if (_selectedAnswer != null) {
-          _selectedAnswers.add(_selectedAnswer!);
+        final answer =
+        _userAnswers[_questions[_currentQuestionIndex].id];
+
+        if (answer != null) {
+          _selectedAnswers.addAll(answer);
         }
 
         _resultMessage = null;
@@ -322,13 +319,13 @@ finishExam();
 
         _isFavorite = false;
 
-        _selectedAnswer =
-        _userAnswers[_questions[_currentQuestionIndex].id];
-
         _selectedAnswers.clear();
 
-        if (_selectedAnswer != null) {
-          _selectedAnswers.add(_selectedAnswer!);
+        final answer =
+        _userAnswers[_questions[_currentQuestionIndex].id];
+
+        if (answer != null) {
+          _selectedAnswers.addAll(answer);
         }
 
         _resultMessage = null;
@@ -355,13 +352,15 @@ finishExam();
           "CHECK DOMAIN -> ID:${q.id} | DOMAIN:${q.domain} | USER:$answer | CORRECT:${q.correctAnswer}"
       );
 
-      if (answer != null &&
-          q.correctAnswers.contains(
-            answer.trim().toUpperCase(),
-          )) {
+      if (answer != null) {
+        final correctAnswers = q.correctAnswers
+            .map((e) => e.trim().toUpperCase())
+            .toSet();
 
-        correct++;
-
+        if (answer.length == correctAnswers.length &&
+            answer.containsAll(correctAnswers)) {
+          correct++;
+        }
       }
 
     }
@@ -404,13 +403,15 @@ finishExam();
         );
 
 
-        if (answer != null &&
-            q.correctAnswers.contains(
-              answer.trim().toUpperCase(),
-            )) {
+        if (answer != null) {
+          final correctAnswers = q.correctAnswers
+              .map((e) => e.trim().toUpperCase())
+              .toSet();
 
-          correct++;
-
+          if (answer.length == correctAnswers.length &&
+              answer.containsAll(correctAnswers)) {
+            correct++;
+          }
         }
 
       }
@@ -633,13 +634,12 @@ finishExam();
 
             if (question.questionFormat == "singleChoice") {
 
-              _selectedAnswer = letter;
 
               _selectedAnswers
                 ..clear()
                 ..add(letter);
 
-              _userAnswers[question.id] = letter;
+              _userAnswers[question.id] = {letter};
 
             } else {
 
@@ -653,12 +653,9 @@ finishExam();
 
               }
 
-              _selectedAnswer =
-              _selectedAnswers.isEmpty
-                  ? null
-                  : _selectedAnswers.first;
 
-              _userAnswers[question.id] = _selectedAnswer ?? "";
+
+              _userAnswers[question.id] = Set<String>.from(_selectedAnswers);
 
             }
 
