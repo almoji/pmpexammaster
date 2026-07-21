@@ -9,6 +9,7 @@ import '../models/exam_result.dart';
 import '../models/domain_result.dart';
 import 'result_screen.dart';
 import 'exam_review_screen.dart';
+import '../services/incorrect_questions_service.dart';
 
 class QuestionScreen extends StatefulWidget {
 
@@ -44,6 +45,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final QuestionService _questionService = QuestionService();
 
   final HistoryService _historyService = HistoryService();
+
+  final IncorrectQuestionsService _incorrectQuestionsService =
+  IncorrectQuestionsService();
 
   List<Question> _questions = [];
 
@@ -132,6 +136,12 @@ finishExam();
 
     debugPrint("Questions loaded: ${questions.length}");
 
+    for (final q in questions) {
+      debugPrint(
+          "ID: ${q.id} | ${q.question.substring(0, 30)}..."
+      );
+    }
+
     setState(() {
 
       _questions = questions
@@ -142,7 +152,7 @@ finishExam();
 
   }
 
-  void checkAnswer() {
+  Future<void> checkAnswer() async {
 
     if (_selectedAnswer == null) {
 
@@ -203,6 +213,10 @@ finishExam();
             "${question.explanation}";
 
       });
+
+      await _incorrectQuestionsService.saveQuestion(
+        _incorrectQuestions.last,
+      );
 
     }
 

@@ -131,6 +131,11 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
                     child: Text("By Question Type"),
                   ),
 
+                  DropdownMenuItem(
+                    value: "Incorrect Questions",
+                    child: Text("Incorrect Questions ⭐"),
+                  ),
+
                 ],
 
                 onChanged: (value) {

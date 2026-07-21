@@ -53,4 +53,38 @@ class Question {
 
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'domain': domain,
+      'difficulty': difficulty,
+      'type': type,
+      'question': question,
+      'optionA': optionA,
+      'optionB': optionB,
+      'optionC': optionC,
+      'optionD': optionD,
+      'correctAnswer': correctAnswer,
+      'explanation': explanation,
+      'userAnswer': userAnswer,
+    };
+  }
+
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+      id: json['id'],
+      domain: json['domain'],
+      difficulty: json['difficulty'],
+      type: json['type'],
+      question: json['question'],
+      optionA: json['optionA'],
+      optionB: json['optionB'],
+      optionC: json['optionC'],
+      optionD: json['optionD'],
+      correctAnswer: json['correctAnswer'],
+      explanation: json['explanation'],
+      userAnswer: json['userAnswer'],
+    );
+  }
+
 }
