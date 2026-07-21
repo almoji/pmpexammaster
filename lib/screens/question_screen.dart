@@ -211,9 +211,10 @@ finishExam();
 
 
 
-    if (question.correctAnswers.contains(
-      _selectedAnswer!.trim().toUpperCase(),
-    )) {
+    if (_selectedAnswers.isNotEmpty &&
+        question.correctAnswers.contains(
+          _selectedAnswers.first.trim().toUpperCase(),
+        )) {
 
       setState(() {
 
@@ -250,7 +251,7 @@ finishExam();
             correctAnswer: question.correctAnswer,
             correctAnswers: question.correctAnswers,
             explanation: question.explanation,
-            userAnswer: _selectedAnswer,
+            userAnswer: _selectedAnswers.isEmpty ? null : _selectedAnswers.first,
           ),
         );
 
