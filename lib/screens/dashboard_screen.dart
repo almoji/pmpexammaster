@@ -280,35 +280,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final Map<String, DomainResult> domains = {};
 
-    for (final exam in results) {
+    for (final attempt in attempts) {
 
-      for (final domain in exam.domainResults) {
+      if (attempt.domain.isEmpty) continue;
 
-        if (!domains.containsKey(domain.domain)) {
+      if (!domains.containsKey(attempt.domain)) {
 
-          domains[domain.domain] = DomainResult(
-            domain: domain.domain,
-            totalQuestions: domain.totalQuestions,
-            correctAnswers: domain.correctAnswers,
-          );
+        domains[attempt.domain] = DomainResult(
+          domain: attempt.domain,
+          totalQuestions: 1,
+          correctAnswers: attempt.correct ? 1 : 0,
+        );
 
-        } else {
+      } else {
 
-          final current = domains[domain.domain]!;
+        final current = domains[attempt.domain]!;
 
-          domains[domain.domain] = DomainResult(
-            domain: current.domain,
-            totalQuestions:
-            current.totalQuestions + domain.totalQuestions,
-            correctAnswers:
-            current.correctAnswers + domain.correctAnswers,
-          );
-
-        }
+        domains[attempt.domain] = DomainResult(
+          domain: current.domain,
+          totalQuestions: current.totalQuestions + 1,
+          correctAnswers: current.correctAnswers + (attempt.correct ? 1 : 0),
+        );
 
       }
 
     }
+
 
     return domains;
 
