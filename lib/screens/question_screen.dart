@@ -295,6 +295,8 @@ finishExam();
       setState(() {
         _currentQuestionIndex--;
 
+        _questionStartTime = DateTime.now();
+
         _isFavorite = false;
 
         _selectedAnswers.clear();
@@ -325,6 +327,8 @@ finishExam();
 
       setState(() {
         _currentQuestionIndex++;
+
+        _questionStartTime = DateTime.now();
 
         _isFavorite = false;
 
