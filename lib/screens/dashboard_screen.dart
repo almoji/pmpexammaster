@@ -290,7 +290,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   }
 
+  String getDomainLevel(double percentage) {
 
+    if (percentage >= 85) {
+
+      return "Excellent";
+
+    }
+
+    if (percentage >= 70) {
+
+      return "Good";
+
+    }
+
+    if (percentage >= 50) {
+
+      return "Needs Practice";
+
+    }
+
+    return "Focus Here";
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -593,6 +615,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       value: domain.percentage / 100,
 
                       minHeight: 10,
+
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Text(
+
+                      getDomainLevel(domain.percentage),
+
+                      style: TextStyle(
+
+                        color: domain.percentage >= 70
+                            ? Colors.green
+                            : Colors.orange,
+
+                        fontWeight: FontWeight.w600,
+
+                      ),
 
                     ),
 
