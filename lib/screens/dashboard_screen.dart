@@ -68,23 +68,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   double get averageScore {
 
-
     if(results.isEmpty) {
 
       return 0;
 
     }
 
-
     final total =
     results.fold<int>(
-        0,
-            (sum,item) =>
-        sum + item.percentage
+      0,
+          (sum,item) =>
+      sum + item.percentage,
     );
 
-
     return total / results.length;
+
+  }
+
+  int get attemptsCorrect {
+
+    return attempts.where((a) => a.correct).length;
+
+  }
+
+  int get attemptsIncorrect {
+
+    return attempts.where((a) => !a.correct).length;
+
+  }
+
+  double get attemptsAccuracy {
+
+    if (attempts.isEmpty) {
+
+      return 0;
+
+    }
+
+    return (attemptsCorrect / attempts.length) * 100;
 
   }
 
@@ -538,7 +559,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               "🎯 Accuracy",
 
-              "${globalAccuracy.round()}%",
+              "${attemptsAccuracy.round()}%",
 
             ),
 
