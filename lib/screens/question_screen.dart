@@ -175,11 +175,14 @@ finishExam();
 
         _answeredQuestions.add(question.id);
 
-
         _resultMessage =
         "✅ Correct!\n\n${question.explanation}";
 
       });
+
+      if (widget.practiceFilter?.mode == "Incorrect Questions") {
+        await _incorrectQuestionsService.removeQuestion(question.id);
+      }
 
 
     } else {
