@@ -566,7 +566,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               "📝 Questions Practiced",
 
-              "$totalQuestionsAnswered",
+              "${attempts.length}",
 
             ),
 
