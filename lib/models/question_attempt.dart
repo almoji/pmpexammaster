@@ -7,6 +7,7 @@ class QuestionAttempt {
   final List<String> selectedAnswers;
   final int elapsedSeconds;
   final ExamMode mode;
+  final String domain;
 
   QuestionAttempt({
     required this.questionId,
@@ -15,6 +16,7 @@ class QuestionAttempt {
     required this.selectedAnswers,
     required this.elapsedSeconds,
     required this.mode,
+    required this.domain,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class QuestionAttempt {
       'selectedAnswers': selectedAnswers,
       'elapsedSeconds': elapsedSeconds,
       'mode': mode.name,
+      'domain': domain,
     };
   }
 
@@ -38,6 +41,7 @@ class QuestionAttempt {
       mode: ExamMode.values.firstWhere(
             (e) => e.name == json['mode'],
       ),
+      domain: json['domain'] ?? '',
     );
   }
 }

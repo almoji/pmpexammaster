@@ -239,6 +239,7 @@ finishExam();
       selectedAnswers: List.from(_selectedAnswers),
       elapsedSeconds: elapsedSeconds,
       mode: ExamMode.practice,
+      domain: question.domain,
     );
 
     await _questionAttemptService.addAttempt(attempt);
