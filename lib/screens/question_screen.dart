@@ -10,6 +10,7 @@ import '../models/domain_result.dart';
 import 'result_screen.dart';
 import 'exam_review_screen.dart';
 import '../services/incorrect_questions_service.dart';
+import '../services/favorite_questions_service.dart';
 
 class QuestionScreen extends StatefulWidget {
 
@@ -50,6 +51,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
   IncorrectQuestionsService();
 
   List<Question> _questions = [];
+
+  final FavoriteQuestionsService _favoriteQuestionsService =
+  FavoriteQuestionsService();
+
+  bool _isFavorite = false;
 
   String? _selectedAnswer;
   String? _resultMessage;
@@ -619,6 +625,25 @@ finishExam();
         ),
 
         actions: [
+
+          IconButton(
+            icon: Icon(
+              _isFavorite ? Icons.star : Icons.star_border,
+            ),
+            onPressed: () async {
+              final question = _questions[_currentQuestionIndex];
+
+              if (_isFavorite) {
+                await _favoriteQuestionsService.removeQuestion(question.id);
+              } else {
+                await _favoriteQuestionsService.saveQuestion(question);
+              }
+
+              setState(() {
+                _isFavorite = !_isFavorite;
+              });
+            },
+          ),
 
           Padding(
 
