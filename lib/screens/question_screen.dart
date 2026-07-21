@@ -58,6 +58,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   bool _isFavorite = false;
 
   String? _selectedAnswer;
+
   String? _resultMessage;
 
   bool _answered = false;
@@ -257,7 +258,7 @@ finishExam();
 
         _resultMessage =
         "❌ Incorrect.\n\n"
-            "Correct answer: ${question.correctAnswer}\n\n"
+            "Correct answer: ${question.correctAnswers.join(", ")}\n\n"
             "${question.explanation}";
 
       });
