@@ -41,6 +41,7 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
 
   late int remainingSeconds;
+  DateTime? _questionStartTime;
   Timer? _timer;
 
   final QuestionService _questionService = QuestionService();
@@ -170,11 +171,11 @@ finishExam();
 
 
     setState(() {
-
       _questions = questions
           .take(widget.numberOfQuestions)
           .toList();
 
+      _questionStartTime = DateTime.now();
     });
 
     await _loadFavoriteStatus();
