@@ -97,17 +97,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   }
 
-  double get attemptsAccuracy {
-
-    if (attempts.isEmpty) {
-
-      return 0;
-
-    }
-
-    return (attemptsCorrect / attempts.length) * 100;
-
-  }
 
 
 
@@ -119,18 +108,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
 
-  int get totalCorrectAnswers {
-
-    return attemptsCorrect;
-
-  }
 
 
-  int get totalIncorrectAnswers {
-
-    return attemptsIncorrect;
-
-  }
 
 
   double get globalAccuracy {
@@ -530,7 +509,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               "🎯 Accuracy",
 
-              "${attemptsAccuracy.round()}%",
+                "${globalAccuracy.round()}%"
 
             ),
 
