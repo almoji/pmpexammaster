@@ -1,13 +1,12 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-
 import '../models/question.dart';
 import '../models/practice_filter.dart';
 import 'incorrect_questions_service.dart';
 import 'favorite_questions_service.dart';
 import 'question_filter_service.dart';
+import 'question_data_service.dart';
 
+final QuestionDataService _questionDataService =
+QuestionDataService();
 
 
 class QuestionService {
@@ -26,11 +25,8 @@ class QuestionService {
   }) async {
 
 
-    final String response = await rootBundle.loadString(
-      'lib/data/questions.json',
-    );
-
-    final List<dynamic> data = json.decode(response);
+    final List<dynamic> data =
+    await _questionDataService.loadQuestions();
 
     if (practiceFilter?.mode == "Incorrect Questions") {
       return await _incorrectQuestionsService.getQuestions();
