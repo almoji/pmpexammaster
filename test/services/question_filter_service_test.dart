@@ -63,5 +63,46 @@ void main() {
     expect(result, hasLength(1));
     expect(result.first['id'], 2);
   });
+  test('maps Multiple Choice to Knowledge', () {
+    final service = QuestionFilterService();
+
+    final data = [
+      {'id': 1, 'type': 'Knowledge'},
+      {'id': 2, 'type': 'Situational'},
+    ];
+
+    const filter = PracticeFilter(
+      mode: 'By Question Type',
+      domain: '',
+      difficulty: '',
+      questionType: 'Multiple Choice',
+    );
+
+    final result = service.applyFilter(data, filter);
+
+    expect(result, hasLength(1));
+    expect(result.first['id'], 1);
+  });
+
+  test('maps Multiple Response to Situational', () {
+    final service = QuestionFilterService();
+
+    final data = [
+      {'id': 1, 'type': 'Knowledge'},
+      {'id': 2, 'type': 'Situational'},
+    ];
+
+    const filter = PracticeFilter(
+      mode: 'By Question Type',
+      domain: '',
+      difficulty: '',
+      questionType: 'Multiple Response',
+    );
+
+    final result = service.applyFilter(data, filter);
+
+    expect(result, hasLength(1));
+    expect(result.first['id'], 2);
+  });
 
 }
