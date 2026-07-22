@@ -125,16 +125,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
 
-    double accuracyFactor = globalAccuracy;
+    final accuracyFactor = stats.globalAccuracy;
 
-
-    double practiceFactor =
-    totalQuestionsAnswered >= 500
+    final practiceFactor =
+    stats.questionsPracticed >= 500
         ? 100
-        : (totalQuestionsAnswered / 500) * 100;
+        : (stats.questionsPracticed / 500) * 100;
 
-
-    double examFactor = averageScore;
+    final examFactor = examStats.averageScore;
 
 
     return (
