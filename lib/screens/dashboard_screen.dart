@@ -62,7 +62,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       attempts = questionAttempts;
 
       stats = DashboardStatisticsService(
-        results: results,
         attempts: attempts,
       );
 
