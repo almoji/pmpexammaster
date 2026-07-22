@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../models/question.dart';
 
 class ExamReviewScreen extends StatelessWidget {
 
-  final int totalQuestions;
+  final List<Question> questions;
 
   final Map<int, Set<String>> userAnswers;
 
@@ -12,7 +13,7 @@ class ExamReviewScreen extends StatelessWidget {
 
     super.key,
 
-    required this.totalQuestions,
+    required this.questions,
 
     required this.userAnswers,
 
@@ -45,36 +46,27 @@ class ExamReviewScreen extends StatelessWidget {
 
           children: [
 
-
             Text(
-
-              "Answered: ${userAnswers.length} / $totalQuestions",
-
+              "Answered: ${userAnswers.length} / ${questions.length}",
               style: const TextStyle(
-
                 fontSize: 22,
-
                 fontWeight: FontWeight.bold,
-
               ),
-
             ),
 
-
             const SizedBox(height: 20),
-
 
             Expanded(
 
               child: ListView.builder(
 
-                itemCount: totalQuestions,
+                itemCount: questions.length,
 
                 itemBuilder: (context, index) {
 
 
-                  final answer =
-                  userAnswers[index + 1];
+    final question = questions[index];
+    final answer = userAnswers[question.id];
 
 
                   return Card(

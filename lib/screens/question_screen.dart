@@ -466,23 +466,14 @@ finishExam();
   void goToExamReview() {
 
     Navigator.push(
-
       context,
-
       MaterialPageRoute(
-
         builder: (context) => ExamReviewScreen(
-
-          totalQuestions: _questions.length,
-
+          questions: _questions,
           userAnswers: _userAnswers,
-
           onSubmit: finishExam,
-
         ),
-
       ),
-
     );
 
   }
