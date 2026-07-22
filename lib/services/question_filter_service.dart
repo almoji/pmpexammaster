@@ -15,6 +15,21 @@ class QuestionFilterService {
     }
 
     if (practiceFilter != null &&
+        practiceFilter.mode == "By Difficulty") {
+      String difficulty = practiceFilter.difficulty;
+
+      if (difficulty == "Moderate") {
+        difficulty = "Medium";
+      } else if (difficulty == "Difficult") {
+        difficulty = "Hard";
+      }
+
+      filteredData = data.where((question) {
+        return question["difficulty"] == difficulty;
+      }).toList();
+    }
+
+    if (practiceFilter != null &&
         practiceFilter.mode == "By Question Type") {
       String questionType = practiceFilter.questionType;
 
@@ -28,7 +43,6 @@ class QuestionFilterService {
         return question["type"] == questionType;
       }).toList();
     }
-
 
     return filteredData;
   }
