@@ -6,6 +6,7 @@ import '../models/question_attempt.dart';
 import '../services/question_attempt_service.dart';
 import '../services/dashboard_statistics_service.dart';
 import '../services/exam_statistics_service.dart';
+import '../widgets/exam_trend_card.dart';
 
 class DashboardScreen extends StatefulWidget {
 
@@ -526,54 +527,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }),
 
 
-            const SizedBox(height:30),
-
+            const SizedBox(height: 30),
 
             if (results.isNotEmpty) ...[
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Exam Trend",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              ExamTrendCard(
+                results: results.reversed.take(5).toList(),
               ),
-
-              const SizedBox(height: 12),
-
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Wrap(
-                    spacing: 8,
-                    children: results
-                        .reversed
-                        .take(5)
-                        .map(
-                          (exam) => Chip(
-                        label: Text("${exam.percentage}%"),
-                      ),
-                    )
-                        .toList(),
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 30),
             ],
 
-
             const Align(
-
-              alignment:
-              Alignment.centerLeft,
-
-
-              child:
-              Text(
-
+              alignment: Alignment.centerLeft,
+              child: Text(
                 "Latest Exams",
 
                 style:
