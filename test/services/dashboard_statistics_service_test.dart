@@ -59,4 +59,81 @@ void main() {
 
     expect(stats.globalAccuracy, 75);
   });
+
+  test('counts correct and incorrect attempts', () {
+    final attempts = [
+      QuestionAttempt(
+        questionId: 1,
+        timestamp: DateTime.now(),
+        correct: true,
+        selectedAnswers: const [],
+        elapsedSeconds: 10,
+        mode: ExamMode.practice,
+        domain: 'People',
+      ),
+      QuestionAttempt(
+        questionId: 2,
+        timestamp: DateTime.now(),
+        correct: false,
+        selectedAnswers: const [],
+        elapsedSeconds: 10,
+        mode: ExamMode.practice,
+        domain: 'People',
+      ),
+      QuestionAttempt(
+        questionId: 3,
+        timestamp: DateTime.now(),
+        correct: true,
+        selectedAnswers: const [],
+        elapsedSeconds: 10,
+        mode: ExamMode.practice,
+        domain: 'People',
+      ),
+    ];
+
+    final stats = DashboardStatisticsService(
+      attempts: attempts,
+    );
+
+    expect(stats.attemptsCorrect, 2);
+    expect(stats.attemptsIncorrect, 1);
+  });
+
+  test('questionsPracticed returns total number of attempts', () {
+    final attempts = [
+      QuestionAttempt(
+        questionId: 1,
+        timestamp: DateTime.now(),
+        correct: true,
+        selectedAnswers: const [],
+        elapsedSeconds: 10,
+        mode: ExamMode.practice,
+        domain: 'People',
+      ),
+      QuestionAttempt(
+        questionId: 2,
+        timestamp: DateTime.now(),
+        correct: false,
+        selectedAnswers: const [],
+        elapsedSeconds: 10,
+        mode: ExamMode.practice,
+        domain: 'People',
+      ),
+      QuestionAttempt(
+        questionId: 3,
+        timestamp: DateTime.now(),
+        correct: true,
+        selectedAnswers: const [],
+        elapsedSeconds: 10,
+        mode: ExamMode.practice,
+        domain: 'People',
+      ),
+    ];
+
+    final stats = DashboardStatisticsService(
+      attempts: attempts,
+    );
+
+    expect(stats.questionsPracticed, 3);
+  });
 }
