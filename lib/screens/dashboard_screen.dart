@@ -416,11 +416,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
             _infoCard(
-
               "🎯 Accuracy",
-
-                "${globalAccuracy.round()}%"
-
+              "${globalAccuracy.round()}%",
             ),
 
 
@@ -735,7 +732,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
 
-  Widget _infoCard(String title,String value){
+  Widget _infoCard(String title, String value) {
 
 
     return Card(
