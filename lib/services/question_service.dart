@@ -45,34 +45,7 @@ class QuestionService {
       practiceFilter,
     );
 
-    if (practiceFilter != null) {
 
-
-
-      if (practiceFilter.mode == "By Difficulty") {
-
-        String difficulty = practiceFilter.difficulty;
-
-        if (difficulty == "Moderate") {
-          difficulty = "Medium";
-        } else if (difficulty == "Difficult") {
-          difficulty = "Hard";
-        }
-
-        filteredData = data.where((question) {
-
-
-          return question["difficulty"] == difficulty;
-
-        }).toList();
-
-
-
-      }
-
-
-
-    }
 
     filteredData.shuffle();
 
