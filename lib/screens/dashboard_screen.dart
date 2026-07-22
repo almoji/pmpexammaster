@@ -5,6 +5,7 @@ import '../models/exam_result.dart';
 import '../models/question_attempt.dart';
 import '../services/question_attempt_service.dart';
 import '../services/dashboard_statistics_service.dart';
+import '../services/exam_statistics_service.dart';
 
 class DashboardScreen extends StatefulWidget {
 
@@ -31,6 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<QuestionAttempt> attempts = [];
 
   late DashboardStatisticsService stats;
+  late ExamStatisticsService examStats;
 
   bool loading = true;
 
@@ -65,6 +67,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         attempts: attempts,
       );
 
+      examStats = ExamStatisticsService(
+        results: results,
+      );
+
       loading = false;
     });
 
@@ -75,20 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   double get averageScore {
 
-    if(results.isEmpty) {
-
-      return 0;
-
-    }
-
-    final total =
-    results.fold<int>(
-      0,
-          (sum,item) =>
-      sum + item.percentage,
-    );
-
-    return total / results.length;
+    return examStats.averageScore;
 
   }
 
@@ -155,20 +148,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   int get bestScore {
 
-    if(results.isEmpty) {
-
-      return 0;
-
-    }
-
-
-    return results
-        .map((e) => e.percentage)
-        .reduce(
-            (a,b) => a > b ? a : b
-    );
+    return examStats.bestScore;
 
   }
+
+
+
 
 
   String get status {
