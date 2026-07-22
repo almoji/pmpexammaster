@@ -90,33 +90,21 @@ class _ExamSetupScreenState extends State<ExamSetupScreen> {
             const SizedBox(height: 20),
 
 
-            ...examOptions.map((number) {
-
-
-              return RadioListTile<int>(
-
-                title: Text(
-                  "$number Questions",
-                ),
-
-                value: number,
-
-                groupValue: selectedQuestions,
-
-                onChanged: (value) {
-
-                  setState(() {
-
-                    selectedQuestions = value!;
-
-                  });
-
-                },
-
-              );
-
-
-            }),
+            RadioGroup<int>(
+              onChanged: (value) {
+                setState(() {
+                  selectedQuestions = value!;
+                });
+              },
+              child: Column(
+                children: examOptions.map((number) {
+                  return RadioListTile<int>(
+                    title: Text("$number Questions"),
+                    value: number,
+                  );
+                }).toList(),
+              ),
+            ),
 
 
             const Spacer(),
