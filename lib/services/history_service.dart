@@ -18,7 +18,7 @@ class HistoryService {
     final results = await getResults();
 
 
-    results.add(result);
+    results.insert(0, result);
 
 
     final jsonList = results
