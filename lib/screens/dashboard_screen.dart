@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../services/history_service.dart';
 import '../models/exam_result.dart';
-import '../models/domain_result.dart';
 import '../models/question_attempt.dart';
 import '../services/question_attempt_service.dart';
 import '../services/dashboard_statistics_service.dart';
@@ -234,40 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   }
 
-  Map<String, DomainResult> get domainStatistics {
 
-    final Map<String, DomainResult> domains = {};
-
-    for (final attempt in attempts) {
-
-      if (attempt.domain.isEmpty) continue;
-
-      if (!domains.containsKey(attempt.domain)) {
-
-        domains[attempt.domain] = DomainResult(
-          domain: attempt.domain,
-          totalQuestions: 1,
-          correctAnswers: attempt.correct ? 1 : 0,
-        );
-
-      } else {
-
-        final current = domains[attempt.domain]!;
-
-        domains[attempt.domain] = DomainResult(
-          domain: current.domain,
-          totalQuestions: current.totalQuestions + 1,
-          correctAnswers: current.correctAnswers + (attempt.correct ? 1 : 0),
-        );
-
-      }
-
-    }
-
-
-    return domains;
-
-  }
 
   String getDomainLevel(double percentage) {
 
@@ -561,7 +527,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             const SizedBox(height: 15),
 
-            ...domainStatistics.values.map((domain) {
+            ...stats.domainStatistics.values.map((domain) {
 
               return Padding(
 

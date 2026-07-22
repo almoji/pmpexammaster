@@ -1,5 +1,6 @@
 import '../models/exam_result.dart';
 import '../models/question_attempt.dart';
+import '../models/domain_result.dart';
 
 class DashboardStatisticsService {
 
@@ -32,6 +33,39 @@ class DashboardStatisticsService {
   int get questionsPracticed {
 
     return attempts.length;
+
+  }
+  Map<String, DomainResult> get domainStatistics {
+
+    final Map<String, DomainResult> domains = {};
+
+    for (final attempt in attempts) {
+
+      if (attempt.domain.isEmpty) continue;
+
+      if (!domains.containsKey(attempt.domain)) {
+
+        domains[attempt.domain] = DomainResult(
+          domain: attempt.domain,
+          totalQuestions: 1,
+          correctAnswers: attempt.correct ? 1 : 0,
+        );
+
+      } else {
+
+        final current = domains[attempt.domain]!;
+
+        domains[attempt.domain] = DomainResult(
+          domain: current.domain,
+          totalQuestions: current.totalQuestions + 1,
+          correctAnswers: current.correctAnswers + (attempt.correct ? 1 : 0),
+        );
+
+      }
+
+    }
+
+    return domains;
 
   }
 
