@@ -20,5 +20,14 @@ class DashboardStatisticsService {
     return attempts.where((a) => !a.correct).length;
 
   }
+  double get globalAccuracy {
+
+    if (attempts.isEmpty) {
+      return 0;
+    }
+
+    return (attemptsCorrect / attempts.length) * 100;
+
+  }
 
 }

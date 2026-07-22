@@ -123,11 +123,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   double get globalAccuracy {
 
-    if (attempts.isEmpty) {
-      return 0;
-    }
-
-    return (attemptsCorrect / attempts.length) * 100;
+    return stats.globalAccuracy;
 
   }
 
