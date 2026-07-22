@@ -56,6 +56,25 @@ class ExamDetailScreen extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 8),
+
+            Chip(
+              avatar: Icon(
+                result.passed ? Icons.check_circle : Icons.cancel,
+                color: Colors.white,
+                size: 18,
+              ),
+              label: Text(
+                result.passed ? "PASSED" : "FAILED",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor:
+              result.passed ? Colors.green : Colors.red,
+            ),
+
             const SizedBox(height: 24),
 
             Text("Questions: ${result.totalQuestions}"),

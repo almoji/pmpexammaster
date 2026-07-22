@@ -529,6 +529,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height:30),
 
 
+            if (results.isNotEmpty) ...[
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Exam Trend",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Wrap(
+                    spacing: 8,
+                    children: results
+                        .reversed
+                        .take(5)
+                        .map(
+                          (exam) => Chip(
+                        label: Text("${exam.percentage}%"),
+                      ),
+                    )
+                        .toList(),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+            ],
 
 
             const Align(
@@ -691,19 +725,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
 
-                    trailing:
-                    Text(
-
-                      "${result.percentage}%",
-
-                      style:
-                      const TextStyle(
-
-                        fontWeight:
-                        FontWeight.bold,
-
-                      ),
-
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "${result.percentage}%",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          result.passed ? "PASSED" : "FAILED",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: result.passed ? Colors.green : Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
 
 
