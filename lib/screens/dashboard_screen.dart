@@ -5,6 +5,7 @@ import '../models/exam_result.dart';
 import '../models/domain_result.dart';
 import '../models/question_attempt.dart';
 import '../services/question_attempt_service.dart';
+import '../services/dashboard_statistics_service.dart';
 
 class DashboardScreen extends StatefulWidget {
 
@@ -29,6 +30,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<ExamResult> results = [];
   List<QuestionAttempt> attempts = [];
+
+  late DashboardStatisticsService stats;
 
   bool loading = true;
 
@@ -58,6 +61,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {
       results = data;
       attempts = questionAttempts;
+
+      stats = DashboardStatisticsService(
+        results: results,
+        attempts: attempts,
+      );
+
       loading = false;
     });
 
@@ -87,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   int get attemptsCorrect {
 
-    return attempts.where((a) => a.correct).length;
+    return stats.attemptsCorrect;
 
   }
 
