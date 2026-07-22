@@ -102,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   int get attemptsIncorrect {
 
-    return attempts.where((a) => !a.correct).length;
+    return stats.attemptsIncorrect;
 
   }
 

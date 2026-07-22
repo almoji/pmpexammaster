@@ -15,4 +15,10 @@ class DashboardStatisticsService {
     return attempts.where((a) => a.correct).length;
   }
 
+  int get attemptsIncorrect {
+
+    return attempts.where((a) => !a.correct).length;
+
+  }
+
 }
