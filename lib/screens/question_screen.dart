@@ -674,17 +674,13 @@ finishExam();
 
             } else {
 
+              final maxAnswers = question.correctAnswers.length;
+
               if (_selectedAnswers.contains(letter)) {
-
                 _selectedAnswers.remove(letter);
-
-              } else {
-
+              } else if (_selectedAnswers.length < maxAnswers) {
                 _selectedAnswers.add(letter);
-
               }
-
-
 
               _userAnswers[question.id] = Set<String>.from(_selectedAnswers);
 
