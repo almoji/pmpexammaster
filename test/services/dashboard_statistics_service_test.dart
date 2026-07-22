@@ -4,6 +4,22 @@ import 'package:pmp_exam_app/models/exam_mode.dart';
 import 'package:pmp_exam_app/models/question_attempt.dart';
 import 'package:pmp_exam_app/services/dashboard_statistics_service.dart';
 
+QuestionAttempt makeAttempt({
+  required int id,
+  required bool correct,
+  String domain = 'People',
+}) {
+  return QuestionAttempt(
+    questionId: id,
+    timestamp: DateTime.now(),
+    correct: correct,
+    selectedAnswers: const [],
+    elapsedSeconds: 10,
+    mode: ExamMode.practice,
+    domain: domain,
+  );
+}
+
 void main() {
   test('globalAccuracy is 0 when there are no attempts', () {
     final stats = DashboardStatisticsService(
@@ -62,33 +78,9 @@ void main() {
 
   test('counts correct and incorrect attempts', () {
     final attempts = [
-      QuestionAttempt(
-        questionId: 1,
-        timestamp: DateTime.now(),
-        correct: true,
-        selectedAnswers: const [],
-        elapsedSeconds: 10,
-        mode: ExamMode.practice,
-        domain: 'People',
-      ),
-      QuestionAttempt(
-        questionId: 2,
-        timestamp: DateTime.now(),
-        correct: false,
-        selectedAnswers: const [],
-        elapsedSeconds: 10,
-        mode: ExamMode.practice,
-        domain: 'People',
-      ),
-      QuestionAttempt(
-        questionId: 3,
-        timestamp: DateTime.now(),
-        correct: true,
-        selectedAnswers: const [],
-        elapsedSeconds: 10,
-        mode: ExamMode.practice,
-        domain: 'People',
-      ),
+      makeAttempt(id: 1, correct: true),
+      makeAttempt(id: 2, correct: false),
+      makeAttempt(id: 3, correct: true),
     ];
 
     final stats = DashboardStatisticsService(
@@ -101,33 +93,9 @@ void main() {
 
   test('questionsPracticed returns total number of attempts', () {
     final attempts = [
-      QuestionAttempt(
-        questionId: 1,
-        timestamp: DateTime.now(),
-        correct: true,
-        selectedAnswers: const [],
-        elapsedSeconds: 10,
-        mode: ExamMode.practice,
-        domain: 'People',
-      ),
-      QuestionAttempt(
-        questionId: 2,
-        timestamp: DateTime.now(),
-        correct: false,
-        selectedAnswers: const [],
-        elapsedSeconds: 10,
-        mode: ExamMode.practice,
-        domain: 'People',
-      ),
-      QuestionAttempt(
-        questionId: 3,
-        timestamp: DateTime.now(),
-        correct: true,
-        selectedAnswers: const [],
-        elapsedSeconds: 10,
-        mode: ExamMode.practice,
-        domain: 'People',
-      ),
+      makeAttempt(id: 1, correct: true),
+      makeAttempt(id: 2, correct: false),
+      makeAttempt(id: 3, correct: true),
     ];
 
     final stats = DashboardStatisticsService(
