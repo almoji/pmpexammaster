@@ -731,25 +731,25 @@ finishExam();
         ),
 
         actions: [
+          if (!widget.isMockExam)
+            IconButton(
+              icon: Icon(
+                _isFavorite ? Icons.star : Icons.star_border,
+              ),
+              onPressed: () async {
+                final question = _questions[_currentQuestionIndex];
 
-          IconButton(
-            icon: Icon(
-              _isFavorite ? Icons.star : Icons.star_border,
+                if (_isFavorite) {
+                  await _favoriteQuestionsService.removeQuestion(question.id);
+                } else {
+                  await _favoriteQuestionsService.saveQuestion(question);
+                }
+
+                setState(() {
+                  _isFavorite = !_isFavorite;
+                });
+              },
             ),
-            onPressed: () async {
-              final question = _questions[_currentQuestionIndex];
-
-              if (_isFavorite) {
-                await _favoriteQuestionsService.removeQuestion(question.id);
-              } else {
-                await _favoriteQuestionsService.saveQuestion(question);
-              }
-
-              setState(() {
-                _isFavorite = !_isFavorite;
-              });
-            },
-          ),
 
           Padding(
 
