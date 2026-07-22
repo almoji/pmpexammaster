@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:pmp_exam_app/services/exam_statistics_service.dart';
 import 'package:pmp_exam_app/models/exam_result.dart';
 
@@ -48,6 +50,80 @@ void main() {
     );
 
     expect(stats.bestScore, 92);
+  });
+
+  test('status is PMP Ready when average score is at least 85', () {
+    final stats = ExamStatisticsService(
+      results: [
+        makeResult(percentage: 90),
+        makeResult(percentage: 86),
+      ],
+    );
+
+    expect(stats.status, 'PMP Ready 🚀');
+  });
+
+  test('status is Good Progress when average score is between 70 and 84', () {
+    final stats = ExamStatisticsService(
+      results: [
+        makeResult(percentage: 75),
+        makeResult(percentage: 80),
+      ],
+    );
+
+    expect(stats.status, 'Good Progress');
+  });
+
+  test('status is Improving when average score is between 50 and 69', () {
+    final stats = ExamStatisticsService(
+      results: [
+        makeResult(percentage: 55),
+        makeResult(percentage: 65),
+      ],
+    );
+
+    expect(stats.status, 'Improving');
+  });
+
+  test('status is Needs Improvement when average score is below 50', () {
+    final stats = ExamStatisticsService(
+      results: [
+        makeResult(percentage: 40),
+        makeResult(percentage: 45),
+      ],
+    );
+
+    expect(stats.status, 'Needs Improvement');
+  });
+
+  test('statusColor matches the current status', () {
+    expect(
+      ExamStatisticsService(
+        results: [makeResult(percentage: 90)],
+      ).statusColor,
+      Colors.green,
+    );
+
+    expect(
+      ExamStatisticsService(
+        results: [makeResult(percentage: 75)],
+      ).statusColor,
+      Colors.lightGreen,
+    );
+
+    expect(
+      ExamStatisticsService(
+        results: [makeResult(percentage: 55)],
+      ).statusColor,
+      Colors.orange,
+    );
+
+    expect(
+      ExamStatisticsService(
+        results: [makeResult(percentage: 40)],
+      ).statusColor,
+      Colors.red,
+    );
   });
 
 }
