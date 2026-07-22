@@ -86,17 +86,39 @@ class ReviewScreen extends StatelessWidget {
 
 
                   Text(
-
                     "Question ${index + 1}",
-
                     style: const TextStyle(
-
                       fontWeight: FontWeight.bold,
-
                       fontSize: 16,
-
                     ),
+                  ),
 
+                  const SizedBox(height: 8),
+
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      Chip(
+                        label: Text(question.domain),
+                      ),
+                      Chip(
+                        label: Text(question.difficulty),
+                      ),
+                      Chip(
+                        label: Text(question.type),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Text(
+                    question.question,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
 
