@@ -112,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   int get totalQuestionsAnswered {
 
-    return attempts.length;
+    return stats.questionsPracticed;
 
   }
 

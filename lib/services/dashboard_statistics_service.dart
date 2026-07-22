@@ -29,5 +29,10 @@ class DashboardStatisticsService {
     return (attemptsCorrect / attempts.length) * 100;
 
   }
+  int get questionsPracticed {
+
+    return attempts.length;
+
+  }
 
 }
