@@ -146,21 +146,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 
 
-                  Text(
-
-                    "${result.date.day}/"
-                        "${result.date.month}/"
-                        "${result.date.year}",
-
-
-                    style: const TextStyle(
-
-                      fontSize: 18,
-
-                      fontWeight: FontWeight.bold,
-
-                    ),
-
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        result.passed ? "PASSED ✅" : "FAILED ❌",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: result.passed ? Colors.green : Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "${result.date.day}/${result.date.month}/${result.date.year}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
 
 
@@ -170,11 +173,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 
                   Text(
-
-                    "Score: ${result.percentage}%",
-
+                    "${result.percentage}%",
+                    style: const TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
+                  Text(
+                    "Questions: ${result.totalQuestions}",
+                  ),
 
 
                   Text(
@@ -193,34 +201,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 
 
-                  const SizedBox(height: 10),
-
-
-
-                  Text(
-
-                    result.passed
-
-                        ? "PASSED ✅"
-
-                        : "FAILED ❌",
-
-
-                    style: TextStyle(
-
-                      fontSize: 18,
-
-                      fontWeight: FontWeight.bold,
-
-                      color: result.passed
-
-                          ? Colors.green
-
-                          : Colors.red,
-
-                    ),
-
-                  ),
 
 
 
