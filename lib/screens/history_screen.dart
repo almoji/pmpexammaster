@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/exam_result.dart';
 import '../services/history_service.dart';
+import 'exam_detail_screen.dart';
 
 
 class HistoryScreen extends StatefulWidget {
@@ -125,11 +126,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
           return Card(
 
+              margin: const EdgeInsets.only(bottom: 15),
 
-            margin: const EdgeInsets.only(bottom: 15),
+              child: InkWell(
 
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ExamDetailScreen(
+                        result: result,
+                      ),
+                    ),
+                  );
+                },
 
-            child: Padding(
+                child: Padding(
 
 
               padding: const EdgeInsets.all(16),
@@ -206,11 +218,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                 ],
 
-              ),
+              ), // Column
 
-            ),
+                ), // Padding
 
-          );
+              ), // InkWell
+
+          ); // Card
 
 
         },
