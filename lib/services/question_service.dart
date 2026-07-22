@@ -5,20 +5,28 @@ import 'favorite_questions_service.dart';
 import 'question_filter_service.dart';
 import 'question_data_service.dart';
 
-final QuestionDataService _questionDataService =
-QuestionDataService();
 
 
 class QuestionService {
 
-  final IncorrectQuestionsService _incorrectQuestionsService =
-  IncorrectQuestionsService();
+  QuestionService({
+    IncorrectQuestionsService? incorrectQuestionsService,
+    FavoriteQuestionsService? favoriteQuestionsService,
+    QuestionFilterService? questionFilterService,
+    QuestionDataService? questionDataService,
+  })  : _incorrectQuestionsService =
+      incorrectQuestionsService ?? IncorrectQuestionsService(),
+        _favoriteQuestionsService =
+            favoriteQuestionsService ?? FavoriteQuestionsService(),
+        _questionFilterService =
+            questionFilterService ?? QuestionFilterService(),
+        _questionDataService =
+            questionDataService ?? QuestionDataService();
 
-  final FavoriteQuestionsService _favoriteQuestionsService =
-  FavoriteQuestionsService();
-
-  final QuestionFilterService _questionFilterService =
-  QuestionFilterService();
+  final IncorrectQuestionsService _incorrectQuestionsService;
+  final FavoriteQuestionsService _favoriteQuestionsService;
+  final QuestionFilterService _questionFilterService;
+  final QuestionDataService _questionDataService;
 
   Future<List<Question>> loadQuestions({
     PracticeFilter? practiceFilter,
