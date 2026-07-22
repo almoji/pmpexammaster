@@ -158,28 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   String get status {
 
-    if(averageScore >= 85) {
-
-      return "PMP Ready 🚀";
-
-    }
-
-
-    if(averageScore >= 70) {
-
-      return "Good Progress";
-
-    }
-
-
-    if(averageScore >= 50) {
-
-      return "Improving";
-
-    }
-
-
-    return "Needs Improvement";
+    return examStats.status;
 
   }
 
@@ -191,29 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Color get statusColor {
 
-
-    if(averageScore >=85){
-
-      return Colors.green;
-
-    }
-
-
-    if(averageScore >=70){
-
-      return Colors.blue;
-
-    }
-
-
-    if(averageScore >=50){
-
-      return Colors.orange;
-
-    }
-
-
-    return Colors.red;
+    return examStats.statusColor;
 
   }
 

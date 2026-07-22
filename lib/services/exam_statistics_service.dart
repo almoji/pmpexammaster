@@ -1,4 +1,5 @@
 import '../models/exam_result.dart';
+import 'package:flutter/material.dart';
 
 class ExamStatisticsService {
 
@@ -32,6 +33,44 @@ class ExamStatisticsService {
     return results
         .map((result) => result.percentage)
         .reduce((a, b) => a > b ? a : b);
+
+  }
+
+  String get status {
+
+    if (averageScore >= 85) {
+      return "PMP Ready 🚀";
+    }
+
+    if (averageScore >= 70) {
+      return "Good Progress";
+    }
+
+    if (averageScore >= 50) {
+      return "Improving";
+    }
+
+    return "Needs Improvement";
+
+  }
+
+  Color get statusColor {
+
+    switch (status) {
+
+      case "PMP Ready 🚀":
+        return Colors.green;
+
+      case "Good Progress":
+        return Colors.lightGreen;
+
+      case "Improving":
+        return Colors.orange;
+
+      default:
+        return Colors.red;
+
+    }
 
   }
 
