@@ -71,6 +71,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   bool _answered = false;
 
+  bool _cameFromReview = false;
+
   int _currentQuestionIndex = 0;
 
 
@@ -463,9 +465,8 @@ finishExam();
 
   }
 
-  void goToExamReview() {
-
-    Navigator.push(
+  Future<void> goToExamReview() async {
+    final selectedQuestion = await Navigator.push<int>(
       context,
       MaterialPageRoute(
         builder: (context) => ExamReviewScreen(
@@ -476,6 +477,27 @@ finishExam();
       ),
     );
 
+    if (selectedQuestion != null) {
+      setState(() {
+        _cameFromReview = true;
+        _currentQuestionIndex = selectedQuestion;
+
+        _selectedAnswers.clear();
+
+        final answer = _userAnswers[_questions[_currentQuestionIndex].id];
+        if (answer != null) {
+          _selectedAnswers.addAll(answer);
+        }
+
+        _answered = _answeredQuestions.contains(
+          _questions[_currentQuestionIndex].id,
+        );
+
+        _resultMessage = null;
+      });
+
+      await _loadFavoriteStatus();
+    }
   }
 
   Future<void> finishExam() async {
@@ -981,10 +1003,16 @@ finishExam();
                   ElevatedButton(
 
                     onPressed: widget.isMockExam
-
                         ? (_currentQuestionIndex == _questions.length - 1
                         ? goToExamReview
-                        : nextQuestion)
+                        : () async {
+                      if (_cameFromReview) {
+                        _cameFromReview = false;
+                        await goToExamReview();
+                      } else {
+                        await nextQuestion();
+                      }
+                    })
 
                         : (_currentQuestionIndex == _questions.length - 1 && _answered
                         ? finishExam

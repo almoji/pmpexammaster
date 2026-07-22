@@ -69,32 +69,29 @@ class ExamReviewScreen extends StatelessWidget {
     final answer = userAnswers[question.id];
 
 
-                  return Card(
-
-                    child: ListTile(
-
-                      leading: CircleAvatar(
-
-                        child: Text(
-                          "${index + 1}",
-                        ),
-
-                      ),
-
-
-                      title: Text(
-
-                        answer == null
-
-                            ? "Not answered"
-
-                            : "Answer: ${answer.join(", ")}",
-
-                      ),
-
-                    ),
-
-                  );
+    return Card(
+      child: ListTile(
+        onTap: () {
+          Navigator.pop(context, index);
+        },
+        leading: CircleAvatar(
+          child: Text(
+            "${index + 1}",
+          ),
+        ),
+        title: Text(
+          answer == null ? "Not Answered" : "Answered",
+        ),
+        trailing: Icon(
+          answer == null
+              ? Icons.radio_button_unchecked
+              : Icons.check_circle,
+          color: answer == null
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
 
 
                 },
