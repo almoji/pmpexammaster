@@ -2,23 +2,17 @@ import 'package:flutter/material.dart';
 import '../models/question.dart';
 
 class ExamReviewScreen extends StatelessWidget {
-
   final List<Question> questions;
-
   final Map<int, Set<String>> userAnswers;
-
+  final Set<int> flaggedQuestions;
   final VoidCallback onSubmit;
 
   const ExamReviewScreen({
-
     super.key,
-
     required this.questions,
-
     required this.userAnswers,
-
+    required this.flaggedQuestions,
     required this.onSubmit,
-
   });
 
 
@@ -67,6 +61,7 @@ class ExamReviewScreen extends StatelessWidget {
 
     final question = questions[index];
     final answer = userAnswers[question.id];
+    final isFlagged = flaggedQuestions.contains(question.id);
 
 
     return Card(
@@ -80,15 +75,21 @@ class ExamReviewScreen extends StatelessWidget {
           ),
         ),
         title: Text(
-          answer == null ? "Not Answered" : "Answered",
+          isFlagged
+              ? "Flagged"
+              : (answer == null ? "Not Answered" : "Answered"),
         ),
         trailing: Icon(
-          answer == null
+          isFlagged
+              ? Icons.flag
+              : (answer == null
               ? Icons.radio_button_unchecked
-              : Icons.check_circle,
-          color: answer == null
+              : Icons.check_circle),
+          color: isFlagged
+              ? Colors.orange
+              : (answer == null
               ? Theme.of(context).colorScheme.error
-              : Theme.of(context).colorScheme.primary,
+              : Theme.of(context).colorScheme.primary),
         ),
       ),
     );

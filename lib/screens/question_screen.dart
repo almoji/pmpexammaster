@@ -23,6 +23,7 @@ class QuestionScreen extends StatefulWidget {
 
   final PracticeFilter? practiceFilter;
 
+
   const QuestionScreen({
 
     super.key,
@@ -42,6 +43,7 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
+  final Set<int> _flaggedQuestions = {};
 
   late int remainingSeconds;
   DateTime? _questionStartTime;
@@ -339,7 +341,22 @@ finishExam();
     }
 
   }
+  void _toggleFlag() {
+    final questionId = _questions[_currentQuestionIndex].id;
 
+    setState(() {
+      if (_flaggedQuestions.contains(questionId)) {
+        _flaggedQuestions.remove(questionId);
+      } else {
+        _flaggedQuestions.add(questionId);
+      }
+    });
+  }
+
+  bool _isCurrentQuestionFlagged() {
+    final questionId = _questions[_currentQuestionIndex].id;
+    return _flaggedQuestions.contains(questionId);
+  }
 
   Future<void> nextQuestion() async {
 
@@ -472,6 +489,7 @@ finishExam();
         builder: (context) => ExamReviewScreen(
           questions: _questions,
           userAnswers: _userAnswers,
+          flaggedQuestions: _flaggedQuestions,
           onSubmit: finishExam,
         ),
       ),
@@ -731,6 +749,16 @@ finishExam();
         ),
 
         actions: [
+          if (widget.isMockExam)
+            IconButton(
+              icon: Icon(
+                _isCurrentQuestionFlagged()
+                    ? Icons.flag
+                    : Icons.outlined_flag,
+              ),
+              onPressed: _toggleFlag,
+            ),
+
           if (!widget.isMockExam)
             IconButton(
               icon: Icon(
