@@ -6,6 +6,7 @@ import '../models/question.dart';
 import '../models/practice_filter.dart';
 import 'incorrect_questions_service.dart';
 import 'favorite_questions_service.dart';
+import 'question_filter_service.dart';
 
 
 
@@ -16,6 +17,9 @@ class QuestionService {
 
   final FavoriteQuestionsService _favoriteQuestionsService =
   FavoriteQuestionsService();
+
+  final QuestionFilterService _questionFilterService =
+  QuestionFilterService();
 
   Future<List<Question>> loadQuestions({
     PracticeFilter? practiceFilter,
@@ -36,21 +40,16 @@ class QuestionService {
       return await _favoriteQuestionsService.getQuestions();
     }
 
-    List<dynamic> filteredData = data;
+    List<dynamic> filteredData = _questionFilterService.applyFilter(
+      data,
+      practiceFilter,
+    );
 
     if (practiceFilter != null) {
 
-      if (practiceFilter.mode == "By Domain") {
 
-        filteredData = data.where((question) {
 
-          return question["domain"] == practiceFilter.domain;
-
-        }).toList();
-
-      }
-
-      else if (practiceFilter.mode == "By Difficulty") {
+      if (practiceFilter.mode == "By Difficulty") {
 
         String difficulty = practiceFilter.difficulty;
 
@@ -71,23 +70,7 @@ class QuestionService {
 
       }
 
-      else if (practiceFilter.mode == "By Question Type") {
 
-        String questionType = practiceFilter.questionType;
-
-        if (questionType == "Multiple Choice") {
-          questionType = "Knowledge";
-        } else if (questionType == "Multiple Response") {
-          questionType = "Situational";
-        }
-
-        filteredData = data.where((question) {
-
-          return question["type"] == questionType;
-
-        }).toList();
-
-      }
 
     }
 
