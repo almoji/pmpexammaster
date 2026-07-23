@@ -120,7 +120,7 @@ class _ExamReviewScreenState extends State<ExamReviewScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text("Remaining"),
+                    const Text("Not Answered"),
                   ],
                 ),
               ],
@@ -156,7 +156,7 @@ class _ExamReviewScreenState extends State<ExamReviewScreen> {
                       _filter = ReviewFilter.notAnswered;
                     });
                   },
-                  label: const Text("Remaining"),
+                  label: const Text("Not Answered"),
                 ),
                 FilterChip(
                   selected: _filter == ReviewFilter.flagged,
@@ -193,7 +193,6 @@ class _ExamReviewScreenState extends State<ExamReviewScreen> {
                   return Card(
       child: ListTile(
         onTap: () {
-          Navigator.pop(context, index);
           Navigator.pop(context, originalIndex);
         },
         leading: CircleAvatar(
