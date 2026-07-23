@@ -19,6 +19,10 @@ class ExamReviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final answeredCount = userAnswers.length;
+    final flaggedCount = flaggedQuestions.length;
+    final remainingCount = questions.length - answeredCount;
+
     return Scaffold(
 
       appBar: AppBar(
@@ -40,12 +44,46 @@ class ExamReviewScreen extends StatelessWidget {
 
           children: [
 
-            Text(
-              "Answered: ${userAnswers.length} / ${questions.length}",
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "$answeredCount",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text("Answered"),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "$flaggedCount",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text("Flagged"),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "$remainingCount",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text("Remaining"),
+                  ],
+                ),
+              ],
             ),
 
             const SizedBox(height: 20),
