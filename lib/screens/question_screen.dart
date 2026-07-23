@@ -14,6 +14,8 @@ import '../services/favorite_questions_service.dart';
 import '../services/question_attempt_service.dart';
 import '../models/question_attempt.dart';
 import '../models/exam_mode.dart';
+import '../services/mock_exam_session_service.dart';
+
 
 class QuestionScreen extends StatefulWidget {
 
@@ -77,6 +79,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   int _currentQuestionIndex = 0;
 
+  bool _examFinished = false;
+
 
   final List<Question> _incorrectQuestions = [];
 
@@ -84,18 +88,22 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   final Set<int> _answeredQuestions = {};
 
-@override
-void initState() {
+  final MockExamSessionService _sessionService =
+  MockExamSessionService();
 
-super.initState();
 
-remainingSeconds = widget.examSeconds;
 
-startTimer();
+  @override
+  void initState() {
+    super.initState();
 
-loadQuestions();
+    remainingSeconds =
+    widget.isMockExam
+        ? 230 * 60
+        : widget.examSeconds;
 
-}
+    loadQuestions();
+  }
 
 
   String formatTime(int seconds) {
@@ -117,35 +125,211 @@ loadQuestions();
 
   }
 
+  Future<void> _saveMockExamSession() async {
+    if (!widget.isMockExam) return;
+
+    await _sessionService.saveSession({
+      'currentQuestionIndex': _currentQuestionIndex,
+      'remainingSeconds': remainingSeconds,
+      'userAnswers': _userAnswers.map(
+            (key, value) => MapEntry(
+          key.toString(),
+          value.toList(),
+        ),
+      ),
+      'flaggedQuestions': _flaggedQuestions.toList(),
+    });
+  }
+
+  Future<void> _checkForSavedMockExam() async {
+    if (!widget.isMockExam) return;
+
+    final hasSavedSession = await _sessionService.hasSession();
+
+    debugPrint("Mock Exam saved session: $hasSavedSession");
+
+    if (!hasSavedSession) {
+      startTimer();
+      return;
+    }
+
+    final session = await _sessionService.loadSession();
+
+    debugPrint("Saved session: $session");
+
+    await _showRestoreMockExamDialog();
+  }
+
+  Future<void> _showRestoreMockExamDialog() async {
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Resume Mock Exam?"),
+          content: const Text(
+            "An unfinished Mock Exam was found.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+
+                await _sessionService.clearSession();
+
+                if (!mounted) return;
+
+                navigator.pop();
+
+                startTimer();
+              },
+              child: const Text("Start New"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+
+                await _restoreMockExamSession();
+
+                if (!mounted) return;
+
+                navigator.pop();
+
+                startTimer();
+              },
+              child: const Text("Continue"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _restoreMockExamSession() async {
+    final session = await _sessionService.loadSession();
+
+    if (session == null) return;
+
+try {
+
+    final savedIndex = session['currentQuestionIndex'] as int;
+
+    final safeIndex = _questions.isEmpty
+        ? 0
+        : savedIndex.clamp(0, _questions.length - 1);
+
+    final savedRemainingSeconds =
+    session['remainingSeconds'] as int;
+
+    final safeRemainingSeconds = savedRemainingSeconds.clamp(
+      0,
+      widget.examSeconds,
+    );
+
+    setState(() {
+      _currentQuestionIndex = safeIndex;
+      remainingSeconds = safeRemainingSeconds;
+
+      _userAnswers.clear();
+      _userAnswers.addAll(
+        (session['userAnswers'] as Map<String, dynamic>).map(
+              (key, value) => MapEntry(
+            int.parse(key),
+            Set<String>.from(value),
+          ),
+        ),
+      );
+
+      _flaggedQuestions.clear();
+      _flaggedQuestions.addAll(
+        List<int>.from(session['flaggedQuestions']),
+      );
+    });
+
+    debugPrint("RESTORED QUESTION: $_currentQuestionIndex");
+    debugPrint("RESTORED TIME: $remainingSeconds");
+} catch (e) {
+  debugPrint("Failed to restore Mock Exam session: $e");
+
+  await _sessionService.clearSession();
+
+  if (!mounted) return;
+
+  setState(() {
+    remainingSeconds = widget.examSeconds;
+    _currentQuestionIndex = 0;
+    _userAnswers.clear();
+    _flaggedQuestions.clear();
+  });
+}
+
+  }
 
   void startTimer() {
 
     _timer = Timer.periodic(
-const Duration(seconds: 1),
-(timer) {
+      const Duration(seconds: 1),
+          (timer) {
 
-if (remainingSeconds > 0) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
 
-setState(() {
-remainingSeconds--;
-});
+        if (remainingSeconds > 0) {
 
-} else {
+          setState(() {
+            remainingSeconds--;
+          });
 
-timer.cancel();
+          _checkTimeWarnings();
 
-finishExam();
+          return;
+        }
 
-}
+        timer.cancel();
 
-},
-);
+        finishExam();
+      },
+    );
+  }
 
-}
+  void _showTimeWarning(
+      String message, {
+        int durationSeconds = 3,
+      }) {
+    if (!mounted) return;
 
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: Duration(seconds: durationSeconds),
+        ),
+      );
+  }
 
+  void _checkTimeWarnings() {
 
+    if (!widget.isMockExam) return;
 
+    if (remainingSeconds == 1800) {
+      _showTimeWarning("⏰ 30 minutes remaining.");
+    } else if (remainingSeconds == 600) {
+      _showTimeWarning("⏰ 10 minutes remaining.");
+    } else if (remainingSeconds == 300) {
+      _showTimeWarning("⚠️ 5 minutes remaining.");
+    } else if (remainingSeconds == 60) {
+      _showTimeWarning(
+        "🚨 Final minute remaining.\n"
+            "The exam will be submitted automatically.",
+        durationSeconds: 5,
+      );
+    }
+  }
 
   Future<void> loadQuestions() async {
 
@@ -181,14 +365,22 @@ finishExam();
 
 
     setState(() {
+
+      final int questionsToLoad =
+      widget.isMockExam
+          ? 180
+          : widget.numberOfQuestions;
+
       _questions = questions
-          .take(widget.numberOfQuestions)
+          .take(questionsToLoad)
           .toList();
 
       _questionStartTime = DateTime.now();
+
     });
 
     await _loadFavoriteStatus();
+    await _checkForSavedMockExam();
   }
   Future<void> _loadFavoriteStatus() async {
     if (_questions.isEmpty) return;
@@ -341,7 +533,7 @@ finishExam();
     }
 
   }
-  void _toggleFlag() {
+  Future<void> _toggleFlag() async {
     final questionId = _questions[_currentQuestionIndex].id;
 
     setState(() {
@@ -351,9 +543,13 @@ finishExam();
         _flaggedQuestions.add(questionId);
       }
     });
+
+    await _saveMockExamSession();
   }
 
   bool _isCurrentQuestionFlagged() {
+    if (_questions.isEmpty) return false;
+
     final questionId = _questions[_currentQuestionIndex].id;
     return _flaggedQuestions.contains(questionId);
   }
@@ -383,6 +579,8 @@ finishExam();
         _answered = _answeredQuestions.contains(
             _questions[_currentQuestionIndex].id);
       });
+
+      await _saveMockExamSession();
 
       await _loadFavoriteStatus();
 
@@ -520,8 +718,11 @@ finishExam();
 
   Future<void> finishExam() async {
 
-    debugPrint("===== FINISH EXAM START =====");
+    if (_examFinished) return;
 
+    _examFinished = true;
+
+    debugPrint("===== FINISH EXAM START =====");
 
     final int correctAnswers =
     calculateCorrectAnswers();
@@ -576,7 +777,7 @@ finishExam();
         );
 
       }
-
+      await _sessionService.clearSession();
 
       debugPrint("===== RESULT SAVED =====");
 
@@ -687,10 +888,8 @@ finishExam();
 
 
         onPressed: _answered
-
             ? null
-
-            : () {
+            : () async {
 
           setState(() {
 
@@ -718,6 +917,7 @@ finishExam();
             }
 
           });
+          await _saveMockExamSession();
 
         },
 
@@ -860,30 +1060,34 @@ finishExam();
 
               const SizedBox(height: 10),
 
-              Text(
-
-                "Answered: ${answeredQuestions()} / ${_questions.length}",
-
-                style: const TextStyle(
-
-                  fontSize: 14,
-
-                  fontWeight: FontWeight.w500,
-
+              InkWell(
+                onTap: goToExamReview,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.assignment,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "Answered: ${answeredQuestions()} / ${_questions.length}",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-
               ),
 
               const SizedBox(height: 10),
 
-              Text(
-                "Time Remaining: ${remainingSeconds ~/ 60}:${(remainingSeconds % 60).toString().padLeft(2, '0')}",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
 
               const SizedBox(height: 10),
 
