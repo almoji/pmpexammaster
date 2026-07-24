@@ -1,24 +1,21 @@
 import '../models/daily_mission.dart';
 import '../models/domain_result.dart';
-import '../models/performance_metrics.dart';
 
-import 'history_service.dart';
-import 'performance_engine.dart';
-
-
-enum MissionType {
-  onboarding,
-  recovery,
-  weakestDomain,
-  consistency,
-  challenge,
-  maintenance,
-}
+  import 'history_service.dart';
+  import 'performance_engine.dart';
+import '../models/mission_type.dart';
+import 'coach_decision_engine.dart';
+import 'coach_reason_engine.dart';
 
 
-class DailyCoachService {
-  final HistoryService _historyService = HistoryService();
-  final PerformanceEngine _performanceEngine = const PerformanceEngine();
+
+  class DailyCoachService {
+    final HistoryService _historyService = HistoryService();
+    final PerformanceEngine _performanceEngine = const PerformanceEngine();
+    final CoachDecisionEngine _coachDecisionEngine =
+    const CoachDecisionEngine();
+    final CoachReasonEngine _coachReasonEngine =
+    const CoachReasonEngine();
 
   DailyCoachService();
 
@@ -57,20 +54,19 @@ class DailyCoachService {
     final readiness = metrics.readiness;
     final impactScore = metrics.impactScore;
 
-    final missionType = _determineMissionType(
-      history,
-      averageScore,
-      domainAverage,
-      metrics,
+    final missionType = _coachDecisionEngine.determineMissionType(
+      history: history,
+      averageScore: averageScore,
+      weakestDomainAverage: domainAverage,
+      metrics: metrics,
     );
 
-    final reasons = _buildReasons(
-      history,
-      weakestDomain,
-      averageScore,
-      domainAverage,
-      readiness,
-      impactScore,
+    final reasons = _coachReasonEngine.buildReasons(
+      weakestDomain: weakestDomain,
+      averageScore: averageScore,
+      domainAverage: domainAverage,
+      readiness: readiness,
+      impactScore: impactScore,
     );
 
     final questionCount = _recommendedQuestionCount(domainAverage);
@@ -232,61 +228,4 @@ class DailyCoachService {
   }
 
 
-
-
-
-
-  MissionType _determineMissionType(
-      List history,
-      double averageScore,
-      double weakestDomainAverage,
-      PerformanceMetrics metrics,
-      ) {
-    if (history.length < 3) {
-      return MissionType.onboarding;
-    }
-
-    final consistency = metrics.consistency;
-    final trend = metrics.trend;
-
-    if (weakestDomainAverage < 60) {
-      return MissionType.recovery;
-    }
-
-    if (consistency < 85) {
-      return MissionType.consistency;
-    }
-
-    if (trend == PerformanceTrend.declining) {
-      return MissionType.recovery;
-    }
-
-    if (averageScore >= 85 &&
-        trend == PerformanceTrend.stable) {
-      return MissionType.maintenance;
-    }
-
-    if (trend == PerformanceTrend.improving) {
-      return MissionType.challenge;
-    }
-
-    return MissionType.weakestDomain;
-  }
-
-  List<String> _buildReasons(
-      List history,
-      String weakestDomain,
-      double averageScore,
-      double domainAverage,
-      double readiness,
-      double impactScore,
-      ) {
-    return [
-      'Readiness Score: ${readiness.toStringAsFixed(1)}%',
-      'Impact Score: ${impactScore.toStringAsFixed(1)}%',
-      'Overall average: ${averageScore.toStringAsFixed(1)}%',
-      '$weakestDomain average: ${domainAverage.toStringAsFixed(1)}%',
-      'This domain currently offers the biggest improvement opportunity.',
-    ];
-  }
 }
