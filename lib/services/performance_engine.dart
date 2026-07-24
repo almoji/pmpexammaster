@@ -95,37 +95,54 @@ class PerformanceEngine {
     return readiness.clamp(0, 100).toDouble();
   }
 
-  double calculateImpactScore(List history) {
-    if (history.length < 2) {
-      return 0;
-    }
 
-    final previousReadiness =
-    calculateReadiness(
-      history.sublist(0, history.length - 1),
-    );
-
-    final currentReadiness =
-    calculateReadiness(history);
-
-    final improvement =
-        currentReadiness - previousReadiness;
-
-    return ((improvement + 10).clamp(0, 20) * 5)
-        .toDouble();
-  }
   PerformanceMetrics calculateMetrics(List history) {
     final consistency = calculateConsistency(history);
     final trend = calculateTrend(history);
     final readiness = calculateReadiness(history);
-    final impactScore = calculateImpactScore(history);
+    double readinessImprovement = 0;
+
+    if (history.length >= 2) {
+      final previousReadiness = calculateReadiness(
+        history.sublist(0, history.length - 1),
+      );
+
+      readinessImprovement = readiness - previousReadiness;
+    }
+
+
+    final impactScore = _calculateImpactScore(
+      readinessImprovement: readinessImprovement,
+      consistency: consistency,
+    );
+
+    final averageScore = history.isEmpty
+        ? 0.0
+        : history
+        .map((e) => e.percentage.toDouble())
+        .reduce((a, b) => a + b) /
+        history.length;
 
     return PerformanceMetrics(
+      averageScore: averageScore,
       readiness: readiness,
+      readinessImprovement: readinessImprovement,
       consistency: consistency,
       trend: trend,
       impactScore: impactScore,
     );
   }
+  double _calculateImpactScore({
+    required double readinessImprovement,
+    required double consistency,
+  }) {
+    final normalizedReadinessScore =
+    ((readinessImprovement + 10).clamp(0, 20) * 5);
 
+    final impact =
+        (normalizedReadinessScore * 0.8) +
+            (consistency * 0.2);
+
+    return impact.clamp(0, 100).toDouble();
+  }
 }
