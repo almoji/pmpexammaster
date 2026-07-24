@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import '../models/performance_metrics.dart';
+
 
 enum PerformanceTrend {
   improving,
@@ -112,4 +114,18 @@ class PerformanceEngine {
     return ((improvement + 10).clamp(0, 20) * 5)
         .toDouble();
   }
+  PerformanceMetrics calculateMetrics(List history) {
+    final consistency = calculateConsistency(history);
+    final trend = calculateTrend(history);
+    final readiness = calculateReadiness(history);
+    final impactScore = calculateImpactScore(history);
+
+    return PerformanceMetrics(
+      readiness: readiness,
+      consistency: consistency,
+      trend: trend,
+      impactScore: impactScore,
+    );
+  }
+
 }

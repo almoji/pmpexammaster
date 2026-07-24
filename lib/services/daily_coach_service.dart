@@ -1,7 +1,7 @@
-
-
 import '../models/daily_mission.dart';
 import '../models/domain_result.dart';
+import '../models/performance_metrics.dart';
+
 import 'history_service.dart';
 import 'performance_engine.dart';
 
@@ -52,15 +52,16 @@ class DailyCoachService {
       weakestDomain,
     );
 
-    final readiness = _performanceEngine.calculateReadiness(history);
+    final metrics = _performanceEngine.calculateMetrics(history);
 
-    final impactScore = _performanceEngine.calculateImpactScore(history);
-
+    final readiness = metrics.readiness;
+    final impactScore = metrics.impactScore;
 
     final missionType = _determineMissionType(
       history,
       averageScore,
       domainAverage,
+      metrics,
     );
 
     final reasons = _buildReasons(
@@ -239,13 +240,14 @@ class DailyCoachService {
       List history,
       double averageScore,
       double weakestDomainAverage,
+      PerformanceMetrics metrics,
       ) {
     if (history.length < 3) {
       return MissionType.onboarding;
     }
 
-    final consistency = _performanceEngine.calculateConsistency(history);
-    final trend = _performanceEngine.calculateTrend(history);
+    final consistency = metrics.consistency;
+    final trend = metrics.trend;
 
     if (weakestDomainAverage < 60) {
       return MissionType.recovery;
