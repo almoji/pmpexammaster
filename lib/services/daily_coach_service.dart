@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../models/daily_mission.dart';
 import '../models/domain_result.dart';
 import 'history_service.dart';
@@ -218,6 +220,31 @@ class DailyCoachService {
     return 30;
   }
 
+  double _calculateConsistency(List history) {
+    if (history.length < 2) {
+      return 100;
+    }
+
+    final scores = history
+        .map((e) => e.percentage.toDouble())
+        .toList();
+
+    final average =
+        scores.reduce((a, b) => a + b) / scores.length;
+
+    double variance = 0;
+
+    for (final score in scores) {
+      variance += pow(score - average, 2).toDouble();
+    }
+
+    variance /= scores.length;
+
+    final deviation = sqrt(variance);
+
+    return (100 - deviation).clamp(0, 100).toDouble();
+  }
+
   MissionType _determineMissionType(
       List history,
       double averageScore,
@@ -226,6 +253,8 @@ class DailyCoachService {
     if (history.length < 3) {
       return MissionType.onboarding;
     }
+
+    final consistency = _calculateConsistency(history);
 
     final recentScores = history
         .skip(history.length - 3)
@@ -236,6 +265,10 @@ class DailyCoachService {
 
     if (weakestDomainAverage < 60) {
       return MissionType.recovery;
+    }
+
+    if (consistency < 85) {
+      return MissionType.consistency;
     }
 
     if (averageScore >= 85) {
