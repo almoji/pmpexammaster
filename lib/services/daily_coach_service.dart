@@ -1,8 +1,10 @@
-import 'dart:math';
+
 
 import '../models/daily_mission.dart';
 import '../models/domain_result.dart';
 import 'history_service.dart';
+import 'performance_engine.dart';
+
 
 enum MissionType {
   onboarding,
@@ -13,16 +15,10 @@ enum MissionType {
   maintenance,
 }
 
-enum PerformanceTrend {
-  improving,
-  stable,
-  declining,
-}
-
-
 
 class DailyCoachService {
   final HistoryService _historyService = HistoryService();
+  final PerformanceEngine _performanceEngine = const PerformanceEngine();
 
   DailyCoachService();
 
@@ -56,9 +52,9 @@ class DailyCoachService {
       weakestDomain,
     );
 
-    final readiness = _calculateReadiness(history);
+    final readiness = _performanceEngine.calculateReadiness(history);
 
-    final impactScore = _calculateImpactScore(history);
+    final impactScore = _performanceEngine.calculateImpactScore(history);
 
 
     final missionType = _determineMissionType(
@@ -234,107 +230,10 @@ class DailyCoachService {
     return 30;
   }
 
-  double _calculateConsistency(List history) {
-    if (history.length < 2) {
-      return 100;
-    }
 
-    final scores = history
-        .map((e) => e.percentage.toDouble())
-        .toList();
 
-    final average =
-        scores.reduce((a, b) => a + b) / scores.length;
 
-    double variance = 0;
 
-    for (final score in scores) {
-      variance += pow(score - average, 2).toDouble();
-    }
-
-    variance /= scores.length;
-
-    final deviation = sqrt(variance);
-
-    return (100 - deviation).clamp(0, 100).toDouble();
-  }
-
-  PerformanceTrend _calculateTrend(List history) {
-    if (history.length < 3) {
-      return PerformanceTrend.stable;
-    }
-
-    final recentScores = history
-        .skip(history.length - 3)
-        .map((e) => e.percentage.toDouble())
-        .toList();
-
-    final first = recentScores.first;
-    final last = recentScores.last;
-
-    if (last - first >= 5) {
-      return PerformanceTrend.improving;
-    }
-
-    if (first - last >= 5) {
-      return PerformanceTrend.declining;
-    }
-
-    return PerformanceTrend.stable;
-  }
-
-  double _calculateReadiness(List history) {
-    if (history.isEmpty) {
-      return 0;
-    }
-
-    final averageScore =
-        history.map((e) => e.percentage).reduce((a, b) => a + b) /
-            history.length;
-
-    final consistency = _calculateConsistency(history);
-
-    final trend = _calculateTrend(history);
-
-    double trendScore;
-
-    switch (trend) {
-      case PerformanceTrend.improving:
-        trendScore = 100;
-        break;
-
-      case PerformanceTrend.stable:
-        trendScore = 75;
-        break;
-
-      case PerformanceTrend.declining:
-        trendScore = 50;
-        break;
-    }
-
-    final readiness =
-        (averageScore * 0.50) +
-            (consistency * 0.30) +
-            (trendScore * 0.20);
-
-    return readiness.clamp(0, 100).toDouble();
-  }
-
-  double _calculateImpactScore(List history) {
-    if (history.length < 2) {
-      return 0;
-    }
-
-    final previousReadiness =
-    _calculateReadiness(history.sublist(0, history.length - 1));
-
-    final currentReadiness =
-    _calculateReadiness(history);
-
-    final improvement = currentReadiness - previousReadiness;
-
-    return (improvement + 10).clamp(0, 20) * 5;
-  }
 
   MissionType _determineMissionType(
       List history,
@@ -345,8 +244,8 @@ class DailyCoachService {
       return MissionType.onboarding;
     }
 
-    final consistency = _calculateConsistency(history);
-    final trend = _calculateTrend(history);
+    final consistency = _performanceEngine.calculateConsistency(history);
+    final trend = _performanceEngine.calculateTrend(history);
 
     if (weakestDomainAverage < 60) {
       return MissionType.recovery;
