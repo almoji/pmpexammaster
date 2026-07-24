@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/practice_filter.dart';
+import '../services/question_data_service.dart';
 import 'question_screen.dart';
 
 
@@ -17,6 +18,15 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
   int _numberOfQuestions = 10;
 
+  int _totalQuestions = 0;
+
+
+  static const Map<String, List<int>> _practiceGroups = {
+    "Quick Practice": [10, 20, 50],
+    "Deep Study": [100, 200, 400],
+    "Marathon": [800],
+  };
+
   String _practiceMode = "Random Questions";
 
   String _selectedDomain = "People";
@@ -24,6 +34,112 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
   String _selectedDifficulty = "Easy";
 
   String _selectedQuestionType = "Multiple Choice";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQuestionCount();
+  }
+
+  Future<void> _loadQuestionCount() async {
+    final count = await QuestionDataService().getQuestionCount();
+
+    setState(() {
+      _totalQuestions = count;
+    });
+  }
+
+  String _estimatedStudyTime() {
+    const int secondsPerQuestion = 90;
+
+    final totalMinutes =
+    (_numberOfQuestions * secondsPerQuestion / 60).round();
+
+    if (totalMinutes < 60) {
+      return "$totalMinutes min";
+    }
+
+    final hours = totalMinutes ~/ 60;
+    final minutes = totalMinutes % 60;
+
+    if (minutes == 0) {
+      return "$hours h";
+    }
+
+    return "$hours h $minutes min";
+  }
+
+  int _practiceSeconds() {
+    // ALL Questions = sin límite de tiempo
+    if (_numberOfQuestions == _totalQuestions) {
+      return 0;
+    }
+
+    // 90 segundos por pregunta
+    return _numberOfQuestions * 90;
+  }
+
+  String _studyGoal() {
+    if (_numberOfQuestions <= 20) {
+      return "Coffee Break";
+    }
+
+    if (_numberOfQuestions <= 50) {
+      return "Quick Practice";
+    }
+
+    if (_numberOfQuestions <= 200) {
+      return "Focused Learning";
+    }
+
+    if (_numberOfQuestions <= 800) {
+      return "Deep Study";
+    }
+
+    return "Complete Question Bank";
+  }
+
+  Widget _buildPracticeGroup({
+    required String title,
+    required List<int> sizes,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
+
+        const SizedBox(height: 8),
+
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: sizes.map((size) {
+
+            return ChoiceChip(
+              label: Text("$size"),
+              selected: _numberOfQuestions == size,
+              onSelected: (_) {
+                setState(() {
+                  _numberOfQuestions = size;
+                });
+              },
+            );
+
+          }).toList(),
+        ),
+
+        const SizedBox(height: 20),
+
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +155,12 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
       ),
 
 
-      body: Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-
-
-          children: [
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
 
 
             const Text(
@@ -109,7 +223,7 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
                 isExpanded: true,
 
-                items: const [
+                items: [
 
                   DropdownMenuItem(
                     value: "Random Questions",
@@ -288,83 +402,127 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
             ],
 
             const Text(
-
-              "Number of questions",
-
+              "Number of Questions",
               style: TextStyle(
-
                 fontWeight: FontWeight.bold,
-
                 fontSize: 18,
-
               ),
-
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
-            SizedBox(
+            _buildPracticeGroup(
+              title: "Quick Practice",
+              sizes: _practiceGroups["Quick Practice"]!,
+            ),
+            const SizedBox(height: 20),
 
-              width: 220,
+            _buildPracticeGroup(
+              title: "Deep Study",
+              sizes: _practiceGroups["Deep Study"]!,
+            ),
 
-              child: DropdownButton<int>(
+            _buildPracticeGroup(
+              title: "Marathon",
+              sizes: _practiceGroups["Marathon"]!,
+            ),
 
-                value: _numberOfQuestions,
-
-                isExpanded: true,
-
-                items: const [
-
-                  DropdownMenuItem(
-
-                    value: 10,
-
-                    child: Text("10 Questions"),
-
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Complete Question Bank",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
                   ),
+                ),
+              ),
 
-                  DropdownMenuItem(
+              const SizedBox(height: 8),
 
-                    value: 20,
-
-                    child: Text("20 Questions"),
-
-                  ),
-
-                  DropdownMenuItem(
-
-                    value: 50,
-
-                    child: Text("50 Questions"),
-
-                  ),
-
-                  DropdownMenuItem(
-
-                    value: 1000,
-
-                    child: Text("All Available Questions"),
-
-                  ),
-
-                ],
-
-                onChanged: (value) {
-
+              ChoiceChip(
+                label: Text("ALL ($_totalQuestions)"),
+                selected: _numberOfQuestions == _totalQuestions,
+                onSelected: (_) {
                   setState(() {
-
-                    _numberOfQuestions = value!;
-
+                    _numberOfQuestions = _totalQuestions;
                   });
-
                 },
-
               ),
-
-            ),
 
             const SizedBox(height: 40),
 
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+
+                    const Row(
+                      children: [
+                        Icon(Icons.menu_book),
+                        SizedBox(width: 8),
+                        Text(
+                          "Study Session",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Questions"),
+                        Text(
+                          "$_numberOfQuestions",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Estimated Time"),
+                        Text(
+                          _numberOfQuestions == _totalQuestions
+                              ? "No Time Limit"
+                              : _estimatedStudyTime(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Goal"),
+                        Text(
+                          _studyGoal(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
 
             ElevatedButton(
 
@@ -381,7 +539,7 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
                       numberOfQuestions: _numberOfQuestions,
 
-                      examSeconds: 3600,
+                      examSeconds: _practiceSeconds(),
 
                       isMockExam: false,
 
@@ -416,12 +574,10 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
             ),
 
 
-          ],
-
+              ],
+            ),
+          ),
         ),
-
-      ),
-
     );
 
   }

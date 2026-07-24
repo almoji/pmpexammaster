@@ -17,6 +17,7 @@ import '../models/exam_mode.dart';
 import '../services/mock_exam_session_service.dart';
 
 
+
 class QuestionScreen extends StatefulWidget {
 
   final int numberOfQuestions;
@@ -81,6 +82,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   bool _examFinished = false;
 
+  bool _isOnOfficialBreak = false;
+
+  bool _firstBreakTaken = false;
+  bool _secondBreakTaken = false;
 
   final List<Question> _incorrectQuestions = [];
 
@@ -100,7 +105,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
     remainingSeconds =
     widget.isMockExam
         ? 230 * 60
-        : widget.examSeconds;
+        : (widget.examSeconds == 0 ? -1 : widget.examSeconds);
 
     loadQuestions();
   }
@@ -269,12 +274,21 @@ try {
 
   void startTimer() {
 
+    // Practice sin límite de tiempo (ALL Questions)
+    if (!widget.isMockExam && remainingSeconds < 0) {
+      return;
+    }
+
     _timer = Timer.periodic(
       const Duration(seconds: 1),
           (timer) {
 
         if (!mounted) {
           timer.cancel();
+          return;
+        }
+
+        if (_isOnOfficialBreak) {
           return;
         }
 
@@ -558,6 +572,19 @@ try {
 
     if (_currentQuestionIndex < _questions.length - 1) {
 
+      if (widget.isMockExam) {
+
+        if (_currentQuestionIndex == 59 && !_firstBreakTaken) {
+          _firstBreakTaken = true;
+          await _showOfficialBreak();
+        }
+
+        if (_currentQuestionIndex == 119 && !_secondBreakTaken) {
+          _secondBreakTaken = true;
+          await _showOfficialBreak();
+        }
+      }
+
       setState(() {
         _currentQuestionIndex++;
 
@@ -586,6 +613,48 @@ try {
 
     }
 
+  }
+
+  Future<void> _showOfficialBreak() async {
+    if (!mounted) return;
+
+    _isOnOfficialBreak = true;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        final isFirstBreak = _currentQuestionIndex == 59;
+
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            title: const Text("Official Break"),
+            content: Text(
+              isFirstBreak
+                  ? "You have completed the first section of the exam.\n\n"
+                  "The exam timer is paused.\n\n"
+                  "You may take an optional break of up to 10 minutes.\n\n"
+                  "When you are ready, press \"Resume Exam\" to continue with the next section."
+                  : "You have completed the second section of the exam.\n\n"
+                  "The exam timer is paused.\n\n"
+                  "You may take an optional break of up to 10 minutes.\n\n"
+                  "When you are ready, press \"Resume Exam\" to continue with the final section.",
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Resume Exam"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    _isOnOfficialBreak = false;
   }
 
   int calculateCorrectAnswers() {
@@ -980,27 +1049,18 @@ try {
             ),
 
           Padding(
-
             padding: const EdgeInsets.only(right: 16),
-
             child: Center(
-
               child: Text(
-
-                formatTime(remainingSeconds),
-
+                (!widget.isMockExam && remainingSeconds < 0)
+                    ? "No Time Limit"
+                    : formatTime(remainingSeconds),
                 style: const TextStyle(
-
                   fontSize: 18,
-
                   fontWeight: FontWeight.bold,
-
                 ),
-
               ),
-
             ),
-
           ),
 
         ],

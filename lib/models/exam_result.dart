@@ -1,4 +1,5 @@
 import 'domain_result.dart';
+import 'question_result.dart';
 
 class ExamResult {
   final DateTime date;
@@ -10,6 +11,9 @@ class ExamResult {
   final bool passed;
   final List<DomainResult> domainResults;
 
+  // NUEVO
+  final List<QuestionResult> questionResults;
+
   ExamResult({
     required this.date,
     required this.score,
@@ -19,8 +23,10 @@ class ExamResult {
     required this.percentage,
     required this.passed,
     required this.domainResults,
-  });
 
+    // NUEVO
+    this.questionResults = const [],
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,41 +37,35 @@ class ExamResult {
       'incorrectAnswers': incorrectAnswers,
       'percentage': percentage,
       'passed': passed,
-
       'domainResults':
-      domainResults
-          .map((item) => item.toJson())
-          .toList(),
+      domainResults.map((item) => item.toJson()).toList(),
+
+      // NUEVO
+      'questionResults':
+      questionResults.map((item) => item.toJson()).toList(),
     };
   }
 
-
   factory ExamResult.fromJson(Map<String, dynamic> json) {
-
     return ExamResult(
-
       date: DateTime.parse(json['date']),
-
       score: json['score'],
-
       totalQuestions: json['totalQuestions'],
-
       correctAnswers: json['correctAnswers'],
-
       incorrectAnswers: json['incorrectAnswers'],
-
       percentage: json['percentage'],
-
       passed: json['passed'],
-
 
       domainResults:
       (json['domainResults'] as List<dynamic>? ?? [])
-          .map(
-            (item) => DomainResult.fromJson(item),
-      )
+          .map((item) => DomainResult.fromJson(item))
           .toList(),
 
+      // NUEVO
+      questionResults:
+      (json['questionResults'] as List<dynamic>? ?? [])
+          .map((item) => QuestionResult.fromJson(item))
+          .toList(),
     );
   }
 }
