@@ -58,6 +58,8 @@ class DailyCoachService {
 
     final readiness = _calculateReadiness(history);
 
+    final impactScore = _calculateImpactScore(history);
+
 
     final missionType = _determineMissionType(
       history,
@@ -71,6 +73,7 @@ class DailyCoachService {
       averageScore,
       domainAverage,
       readiness,
+      impactScore,
     );
 
     final questionCount = _recommendedQuestionCount(domainAverage);
@@ -317,6 +320,22 @@ class DailyCoachService {
     return readiness.clamp(0, 100).toDouble();
   }
 
+  double _calculateImpactScore(List history) {
+    if (history.length < 2) {
+      return 0;
+    }
+
+    final previousReadiness =
+    _calculateReadiness(history.sublist(0, history.length - 1));
+
+    final currentReadiness =
+    _calculateReadiness(history);
+
+    final improvement = currentReadiness - previousReadiness;
+
+    return (improvement + 10).clamp(0, 20) * 5;
+  }
+
   MissionType _determineMissionType(
       List history,
       double averageScore,
@@ -359,9 +378,11 @@ class DailyCoachService {
       double averageScore,
       double domainAverage,
       double readiness,
+      double impactScore,
       ) {
     return [
       'Readiness Score: ${readiness.toStringAsFixed(1)}%',
+      'Impact Score: ${impactScore.toStringAsFixed(1)}%',
       'Overall average: ${averageScore.toStringAsFixed(1)}%',
       '$weakestDomain average: ${domainAverage.toStringAsFixed(1)}%',
       'This domain currently offers the biggest improvement opportunity.',
