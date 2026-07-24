@@ -56,6 +56,8 @@ class DailyCoachService {
       weakestDomain,
     );
 
+    final readiness = _calculateReadiness(history);
+
 
     final missionType = _determineMissionType(
       history,
@@ -68,6 +70,7 @@ class DailyCoachService {
       weakestDomain,
       averageScore,
       domainAverage,
+      readiness,
     );
 
     final questionCount = _recommendedQuestionCount(domainAverage);
@@ -277,6 +280,43 @@ class DailyCoachService {
     return PerformanceTrend.stable;
   }
 
+  double _calculateReadiness(List history) {
+    if (history.isEmpty) {
+      return 0;
+    }
+
+    final averageScore =
+        history.map((e) => e.percentage).reduce((a, b) => a + b) /
+            history.length;
+
+    final consistency = _calculateConsistency(history);
+
+    final trend = _calculateTrend(history);
+
+    double trendScore;
+
+    switch (trend) {
+      case PerformanceTrend.improving:
+        trendScore = 100;
+        break;
+
+      case PerformanceTrend.stable:
+        trendScore = 75;
+        break;
+
+      case PerformanceTrend.declining:
+        trendScore = 50;
+        break;
+    }
+
+    final readiness =
+        (averageScore * 0.50) +
+            (consistency * 0.30) +
+            (trendScore * 0.20);
+
+    return readiness.clamp(0, 100).toDouble();
+  }
+
   MissionType _determineMissionType(
       List history,
       double averageScore,
@@ -318,8 +358,10 @@ class DailyCoachService {
       String weakestDomain,
       double averageScore,
       double domainAverage,
+      double readiness,
       ) {
     return [
+      'Readiness Score: ${readiness.toStringAsFixed(1)}%',
       'Overall average: ${averageScore.toStringAsFixed(1)}%',
       '$weakestDomain average: ${domainAverage.toStringAsFixed(1)}%',
       'This domain currently offers the biggest improvement opportunity.',
