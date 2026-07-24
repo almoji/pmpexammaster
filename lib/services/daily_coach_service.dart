@@ -13,6 +13,14 @@ enum MissionType {
   maintenance,
 }
 
+enum PerformanceTrend {
+  improving,
+  stable,
+  declining,
+}
+
+
+
 class DailyCoachService {
   final HistoryService _historyService = HistoryService();
 
@@ -245,6 +253,30 @@ class DailyCoachService {
     return (100 - deviation).clamp(0, 100).toDouble();
   }
 
+  PerformanceTrend _calculateTrend(List history) {
+    if (history.length < 3) {
+      return PerformanceTrend.stable;
+    }
+
+    final recentScores = history
+        .skip(history.length - 3)
+        .map((e) => e.percentage.toDouble())
+        .toList();
+
+    final first = recentScores.first;
+    final last = recentScores.last;
+
+    if (last - first >= 5) {
+      return PerformanceTrend.improving;
+    }
+
+    if (first - last >= 5) {
+      return PerformanceTrend.declining;
+    }
+
+    return PerformanceTrend.stable;
+  }
+
   MissionType _determineMissionType(
       List history,
       double averageScore,
@@ -255,13 +287,7 @@ class DailyCoachService {
     }
 
     final consistency = _calculateConsistency(history);
-
-    final recentScores = history
-        .skip(history.length - 3)
-        .map((e) => e.percentage.toDouble())
-        .toList();
-
-    final trend = recentScores.last - recentScores.first;
+    final trend = _calculateTrend(history);
 
     if (weakestDomainAverage < 60) {
       return MissionType.recovery;
@@ -271,11 +297,16 @@ class DailyCoachService {
       return MissionType.consistency;
     }
 
-    if (averageScore >= 85) {
+    if (trend == PerformanceTrend.declining) {
+      return MissionType.recovery;
+    }
+
+    if (averageScore >= 85 &&
+        trend == PerformanceTrend.stable) {
       return MissionType.maintenance;
     }
 
-    if (trend >= 8) {
+    if (trend == PerformanceTrend.improving) {
       return MissionType.challenge;
     }
 
