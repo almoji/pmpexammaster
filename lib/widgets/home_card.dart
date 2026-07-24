@@ -20,7 +20,7 @@ class HomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: Theme.of(context).brightness == Brightness.dark ? 1 : 4,
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
@@ -29,14 +29,14 @@ class HomeCard extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 20,
+            horizontal: 20,
+            vertical: 14,
           ),
           child: Column(
             children: [
               Container(
-                width: 68,
-                height: 68,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
@@ -44,7 +44,7 @@ class HomeCard extends StatelessWidget {
                 child: Icon(
                   icon,
                   color: color,
-                  size: 34,
+                  size: 30,
                 ),
               ),
 

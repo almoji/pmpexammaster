@@ -263,7 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     const Text(
 
-                      "PMP Progress",
+                      "Progress",
 
                       style:
                       TextStyle(
@@ -378,75 +378,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
             Row(
-
               children: [
-
                 Expanded(
-                  child:
-                  _infoCard(
-
+                  child: _infoCard(
                     "✅ Correct",
-
                     "$attemptsCorrect",
-
                   ),
                 ),
-
-
-                const SizedBox(width:10),
-
-
+                const SizedBox(width: 10),
                 Expanded(
-                  child:
-                  _infoCard(
-
+                  child: _infoCard(
                     "❌ Incorrect",
-
                     "$attemptsIncorrect",
-
                   ),
                 ),
-
-
               ],
-
             ),
 
+            const SizedBox(height: 10),
 
-            const SizedBox(height:10),
-
-
-            _infoCard(
-              "🎯 Accuracy",
-              "${globalAccuracy.round()}%",
+            Row(
+              children: [
+                Expanded(
+                  child: _infoCard(
+                    "🎯 Accuracy",
+                    "${globalAccuracy.round()}%",
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _infoCard(
+                    "🏆 Best Score",
+                    "$bestScore%",
+                  ),
+                ),
+              ],
             ),
 
-
-
-
-            const SizedBox(height:10),
-
-
-
+            const SizedBox(height: 10),
 
             _infoCard(
-
-              "🏆 Best Score",
-
-              "$bestScore%",
-
-            ),
-
-
-            const SizedBox(height:10),
-
-
-            _infoCard(
-
               "📝 Questions Practiced",
-
               "${attempts.length}",
-
             ),
 
             const SizedBox(height: 30),

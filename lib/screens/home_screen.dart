@@ -16,29 +16,22 @@ class HomeScreen extends StatelessWidget {
 
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(16),
           children: [
             Center(
               child: Column(
                 children: [
-                  const Icon(
-                    Icons.workspace_premium,
-                    size: 72,
-                    color: Colors.blue,
-                  ),
-
-                  const SizedBox(height: 12),
 
                   const Text(
                     "PMP Exam Preparation",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
 
                   const Text(
                     "Become PMP Certified",
@@ -49,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
@@ -60,11 +53,7 @@ class HomeScreen extends StatelessWidget {
 
 
 
-        const Divider(
-          thickness: 1,
-        ),
-
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
 
         HomeCard(
               icon: Icons.menu_book_rounded,
@@ -80,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             HomeCard(
               icon: Icons.analytics_rounded,
@@ -97,7 +86,7 @@ class HomeScreen extends StatelessWidget {
               },
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             HomeCard(
               icon: Icons.psychology_rounded,
@@ -114,9 +103,8 @@ class HomeScreen extends StatelessWidget {
               },
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
-            const SizedBox(height: 20),
 
             HomeCard(
               icon: Icons.fact_check_rounded,
