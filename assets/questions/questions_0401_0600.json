@@ -162,20 +162,6 @@
     "explanation": "The project manager should first ensure that everyone has a common understanding of the documented acceptance criteria. Clarifying expectations early reduces rework, improves quality and minimizes schedule delays."
   },
   {
-    "id": 411,
-    "domain": "Process",
-    "difficulty": "Medium",
-    "type": "Situational",
-    "questionFormat": "multipleChoice",
-    "question": "A project manager discovers that several work packages are taking longer than planned because team members have different interpretations of the acceptance criteria. What should the project manager do FIRST?",
-    "optionA": "Ask the team to continue working until the customer clarifies the requirements.",
-    "optionB": "Review the documented acceptance criteria with the team, clarify expectations and update project documents if necessary.",
-    "optionC": "Reduce the project's quality standards to maintain the schedule.",
-    "optionD": "Escalate the issue to the project sponsor immediately.",
-    "correctAnswer": "B",
-    "explanation": "The project manager should first ensure that everyone has a common understanding of the documented acceptance criteria. Clarifying expectations early reduces rework, improves quality and minimizes schedule delays."
-  },
-  {
   "id": 412,
   "domain": "People",
   "difficulty": "Medium",
