@@ -24,6 +24,22 @@ class QuestionDataService {
     'assets/questions/questions_3001_3200.json',
     'assets/questions/questions_3201_3400.json',
     'assets/questions/questions_3401_3600.json',
+    'assets/questions/questions_3601_3800.json',
+    'assets/questions/questions_3801_4000.json',
+    'assets/questions/questions_4001_4200.json',
+    'assets/questions/questions_4201_4400.json',
+    'assets/questions/questions_4401_4600.json',
+    'assets/questions/questions_4601_4800.json',
+    'assets/questions/questions_4801_5000.json',
+    'assets/questions/questions_5001_5200.json',
+    'assets/questions/questions_5201_5400.json',
+    'assets/questions/questions_5401_5600.json',
+    'assets/questions/questions_5601_5800.json',
+    'assets/questions/questions_5801_6000.json',
+    'assets/questions/questions_6001_6200.json',
+
+
+
 
 
 

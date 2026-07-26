@@ -1,0 +1,17 @@
+[
+  {
+    "id": 3601,
+    "domain": "Process",
+    "difficulty": "Easy",
+    "type": "Knowledge",
+    "questionFormat": "multipleChoice",
+    "question": "Which project document formally authorises the existence of a project and gives the project manager authority to apply organisational resources?",
+    "optionA": "Business case",
+    "optionB": "Project management plan",
+    "optionC": "Project charter",
+    "optionD": "Benefits management plan",
+    "correctAnswer": "C",
+    "explanation": "The project charter formally authorises the project, identifies the project manager and grants the authority to apply organisational resources to project activities."
+  }
+
+]
