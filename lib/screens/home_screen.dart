@@ -5,6 +5,9 @@ import 'mock_exam_setup_screen.dart';
 import 'practice_setup_screen.dart';
 import '../widgets/home_card.dart';
 import 'daily_coach_screen.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
+import '../theme/app_text_styles.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,39 +19,37 @@ class HomeScreen extends StatelessWidget {
 
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 22,
+            vertical: 26,
+          ),
           children: [
             Center(
               child: Column(
                 children: [
 
-                  const Text(
-                    "PMP Exam Preparation",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const Icon(
+                    Icons.menu_book_rounded,
+                    size: 60,
+                    color: AppColors.primary,
                   ),
 
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 14),
 
                   const Text(
-                    "Become PMP Certified",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
+                    "PMP Exam Master",
+                    style: AppTextStyles.pageTitle,
                   ),
 
-                  const SizedBox(height: 12),
+                  AppSpacing.vSpaceSm,
+
+                  const Text(
+                    "Prepare • Practice • Pass",
+                    style: AppTextStyles.bodySecondary,
+                  ),
+                  AppSpacing.vSpaceLg,
                 ],
               ),
-            ),
-
-            const Divider(
-              thickness: 1,
             ),
 
 

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_colors.dart';
+import '../theme/app_radius.dart';
+import '../theme/app_text_styles.dart';
+
 class HomeCard extends StatelessWidget {
   final IconData icon;
   final Color color;
@@ -22,15 +26,15 @@ class HomeCard extends StatelessWidget {
       elevation: Theme.of(context).brightness == Brightness.dark ? 1 : 4,
       margin: const EdgeInsets.symmetric(vertical: 4),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: AppRadius.lg,
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 14,
+            horizontal: 22,
+            vertical: 18,
           ),
           child: Column(
             children: [
@@ -53,10 +57,7 @@ class HomeCard extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyles.cardTitle,
               ),
 
               const SizedBox(height: 4),
@@ -64,10 +65,7 @@ class HomeCard extends StatelessWidget {
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey.shade600,
-                ),
+                style: AppTextStyles.bodySecondary,
               ),
             ],
           ),

@@ -4,6 +4,8 @@ import '../models/practice_filter.dart';
 import '../services/question_data_service.dart';
 import 'question_screen.dart';
 
+import '../theme/app_text_styles.dart';
+
 
 class PracticeSetupScreen extends StatefulWidget {
 
@@ -197,19 +199,10 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
             const SizedBox(height: 30),
 
-            const Text(
-
-              "Practice Mode",
-
-              style: TextStyle(
-
-                fontWeight: FontWeight.bold,
-
-                fontSize: 18,
-
-              ),
-
-            ),
+                const Text(
+                  "Practice Mode",
+                  style: AppTextStyles.sectionHeading,
+                ),
 
             const SizedBox(height: 10),
 
