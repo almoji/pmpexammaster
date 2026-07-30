@@ -64,8 +64,48 @@ class DashboardStatisticsService {
 
     }
 
+
+
     return domains;
 
+  }
+  //==========================================================
+  // TODAY STATISTICS
+  //==========================================================
+
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
+
+  List<QuestionAttempt> get todayAttempts {
+    return attempts.where((a) => _isToday(a.timestamp)).toList();
+  }
+
+  int get questionsToday {
+    return todayAttempts.length;
+  }
+
+  int get correctToday {
+    return todayAttempts.where((a) => a.correct).length;
+  }
+
+  double get todayAccuracy {
+    if (todayAttempts.isEmpty) {
+      return 0;
+    }
+
+    return (correctToday / todayAttempts.length) * 100;
+  }
+
+  int get studyTimeToday {
+    return todayAttempts.fold(
+      0,
+          (sum, a) => sum + a.elapsedSeconds,
+    );
   }
 
 }

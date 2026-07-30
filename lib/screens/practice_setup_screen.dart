@@ -4,16 +4,26 @@ import '../models/practice_filter.dart';
 import '../services/question_data_service.dart';
 import 'question_screen.dart';
 
-import '../theme/app_text_styles.dart';
+import '../widgets/practice_setup/practice_mode_card.dart';
+import '../widgets/practice_setup/practice_header.dart';
+import '../widgets/practice_setup/practice_question_card.dart';
+import '../widgets/practice_setup/practice_summary_card.dart';
+import '../widgets/practice_setup/practice_start_button.dart';
+import '../widgets/practice_setup/practice_option_button.dart';
+import '../widgets/app_dropdown.dart';
 
 
 class PracticeSetupScreen extends StatefulWidget {
 
-  const PracticeSetupScreen({super.key});
+  final String? initialDomain;
+
+  const PracticeSetupScreen({
+    super.key,
+    this.initialDomain,
+  });
 
   @override
   State<PracticeSetupScreen> createState() => _PracticeSetupScreenState();
-
 }
 
 class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
@@ -31,7 +41,7 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
   String _practiceMode = "Random Questions";
 
-  String _selectedDomain = "People";
+  late String _selectedDomain;
 
   String _selectedDifficulty = "Easy";
 
@@ -40,6 +50,13 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
   @override
   void initState() {
     super.initState();
+
+    _selectedDomain = widget.initialDomain ?? "People";
+
+    if (widget.initialDomain != null) {
+      _practiceMode = "By Domain";
+    }
+
     _loadQuestionCount();
   }
 
@@ -109,35 +126,57 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
+        Row(
+          children: [
+
+            Icon(
+              title == "Quick Practice"
+                  ? Icons.flash_on_rounded
+                  : title == "Deep Study"
+                  ? Icons.psychology_rounded
+                  : Icons.flag_rounded,
+              color: const Color(0xFF2D86FF),
+              size: 20,
+            ),
+
+            const SizedBox(width:14),
+
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize:17,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF173B7A),
+              ),
+            ),
+
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        SizedBox(
+          height: 42,
+          child: Row(
+            children: sizes.map((size) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: PracticeOptionButton(
+                  text: "$size",
+                  width: 82,
+                  selected: _numberOfQuestions == size,
+                  onTap: () {
+                    setState(() {
+                      _numberOfQuestions = size;
+                    });
+                  },
+                ),
+              );
+            }).toList(),
           ),
         ),
 
-        const SizedBox(height: 8),
-
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: sizes.map((size) {
-
-            return ChoiceChip(
-              label: Text("$size"),
-              selected: _numberOfQuestions == size,
-              onSelected: (_) {
-                setState(() {
-                  _numberOfQuestions = size;
-                });
-              },
-            );
-
-          }).toList(),
-        ),
-
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
 
       ],
     );
@@ -157,116 +196,29 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
       ),
 
 
-        body: SafeArea(
+      body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(22),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
 
+                  const PracticeHeader(),
 
-            const Text(
+                  const SizedBox(height:10),
 
-              "Practice Questions",
-
-              style: TextStyle(
-
-                fontSize: 28,
-
-                fontWeight: FontWeight.bold,
-
-              ),
-
-            ),
-
-
-            const SizedBox(height: 30),
-
-
-            const Text(
-
-              "Study mode\nInstant feedback enabled",
-
-              textAlign: TextAlign.center,
-
-              style: TextStyle(
-
-                fontSize: 20,
-
-              ),
-
-            ),
-
-            const SizedBox(height: 30),
-
-                const Text(
-                  "Practice Mode",
-                  style: AppTextStyles.sectionHeading,
-                ),
-
-            const SizedBox(height: 10),
-
-            SizedBox(
-
-              width: 220,
-
-              child: DropdownButton<String>(
-
-                value: _practiceMode,
-
-                isExpanded: true,
-
-                items: [
-
-                  DropdownMenuItem(
-                    value: "Random Questions",
-                    child: Text("Random Questions"),
+                  PracticeModeCard(
+                    value: _practiceMode,
+                    onChanged: (value){
+                      setState(() {
+                        _practiceMode=value;
+                      });
+                    },
                   ),
 
-                  DropdownMenuItem(
-                    value: "By Domain",
-                    child: Text("By Domain"),
-                  ),
+                  const SizedBox(height:10),
 
-                  DropdownMenuItem(
-                    value: "By Difficulty",
-                    child: Text("By Difficulty"),
-                  ),
-
-                  DropdownMenuItem(
-                    value: "By Question Type",
-                    child: Text("By Question Type"),
-                  ),
-
-                  DropdownMenuItem(
-                    value: "Incorrect Questions",
-                    child: Text("Incorrect Questions ⭐"),
-                  ),
-
-                  DropdownMenuItem(
-                    value: "Favorite Questions",
-                    child: Text("Favorite Questions ❤️"),
-                  ),
-
-                ],
-
-                onChanged: (value) {
-
-                  setState(() {
-
-                    _practiceMode = value!;
-
-                  });
-
-                },
-
-              ),
-
-            ),
-
-            const SizedBox(height: 30),
-
-            if (_practiceMode == "By Domain") ...[
+                  if (_practiceMode == "By Domain") ...[
 
               const Text(
                 "Domain",
@@ -278,34 +230,32 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
               const SizedBox(height: 10),
 
-              SizedBox(
-                width: 220,
-                child: DropdownButton<String>(
-                  value: _selectedDomain,
-                  isExpanded: true,
-                  items: const [
-                    DropdownMenuItem(
-                      value: "People",
-                      child: Text("People"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Process",
-                      child: Text("Process"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Business Environment",
-                      child: Text("Business Environment"),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedDomain = value!;
-                    });
-                  },
-                ),
-              ),
+                    AppDropdown<String>(
+                      value: _selectedDomain,
 
-              const SizedBox(height: 30),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedDomain = value;
+                        });
+                      },
+
+                      entries: const [
+                        DropdownMenuEntry(
+                          value: "People",
+                          label: "People",
+                        ),
+                        DropdownMenuEntry(
+                          value: "Process",
+                          label: "Process",
+                        ),
+                        DropdownMenuEntry(
+                          value: "Business Environment",
+                          label: "Business Environment",
+                        ),
+                      ],
+                    ),
+
+              const SizedBox(height: 10),
 
             ],
 
@@ -319,36 +269,34 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
 
-              SizedBox(
-                width: 220,
-                child: DropdownButton<String>(
-                  value: _selectedDifficulty,
-                  isExpanded: true,
-                  items: const [
-                    DropdownMenuItem(
-                      value: "Easy",
-                      child: Text("Easy"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Moderate",
-                      child: Text("Moderate"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Difficult",
-                      child: Text("Difficult"),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedDifficulty = value!;
-                    });
-                  },
-                ),
+              AppDropdown<String>(
+                value: _selectedDifficulty,
+
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDifficulty = value;
+                  });
+                },
+
+                entries: const [
+                  DropdownMenuEntry(
+                    value: "Easy",
+                    label: "Easy",
+                  ),
+                  DropdownMenuEntry(
+                    value: "Moderate",
+                    label: "Moderate",
+                  ),
+                  DropdownMenuEntry(
+                    value: "Difficult",
+                    label: "Difficult",
+                  ),
+                ],
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 16),
 
             ],
 
@@ -362,209 +310,130 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
 
-              SizedBox(
-                width: 220,
-                child: DropdownButton<String>(
-                  value: _selectedQuestionType,
-                  isExpanded: true,
-                  items: const [
+              AppDropdown<String>(
+                value: _selectedQuestionType,
 
-                    DropdownMenuItem(
-                      value: "Multiple Choice",
-                      child: Text("Multiple Choice"),
-                    ),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedQuestionType = value;
+                  });
+                },
 
-                    DropdownMenuItem(
-                      value: "Multiple Response",
-                      child: Text("Multiple Response"),
-                    ),
-
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedQuestionType = value!;
-                    });
-                  },
-                ),
+                entries: const [
+                  DropdownMenuEntry(
+                    value: "Multiple Choice",
+                    label: "Multiple Choice",
+                  ),
+                  DropdownMenuEntry(
+                    value: "Multiple Response",
+                    label: "Multiple Response",
+                  ),
+                ],
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
 
             ],
 
-            const Text(
-              "Number of Questions",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            _buildPracticeGroup(
-              title: "Quick Practice",
-              sizes: _practiceGroups["Quick Practice"]!,
-            ),
-            const SizedBox(height: 20),
-
-            _buildPracticeGroup(
-              title: "Deep Study",
-              sizes: _practiceGroups["Deep Study"]!,
-            ),
-
-            _buildPracticeGroup(
-              title: "Marathon",
-              sizes: _practiceGroups["Marathon"]!,
-            ),
-
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Complete Question Bank",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              ChoiceChip(
-                label: Text("ALL ($_totalQuestions)"),
-                selected: _numberOfQuestions == _totalQuestions,
-                onSelected: (_) {
-                  setState(() {
-                    _numberOfQuestions = _totalQuestions;
-                  });
-                },
-              ),
-
-            const SizedBox(height: 40),
-
-            Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-
-                    const Row(
+                  PracticeQuestionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.menu_book),
-                        SizedBox(width: 8),
-                        Text(
-                          "Study Session",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+
+
+                        _buildPracticeGroup(
+                          title: "Quick Practice",
+                          sizes: _practiceGroups["Quick Practice"]!,
+                        ),
+
+
+                        _buildPracticeGroup(
+                          title: "Deep Study",
+                          sizes: _practiceGroups["Deep Study"]!,
+                        ),
+
+                        _buildPracticeGroup(
+                          title: "Marathon",
+                          sizes: _practiceGroups["Marathon"]!,
+                        ),
+
+                        Row(
+                          children: [
+
+                            const Icon(
+                              Icons.auto_stories_rounded,
+                              color: Color(0xFF2D86FF),
+                              size: 20,
+                            ),
+
+                            const SizedBox(width: 8),
+
+                            const Text(
+                              "Complete Question Bank",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF173B7A),
+                              ),
+                            ),
+
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        PracticeOptionButton(
+                          text: "ALL ($_totalQuestions)",
+                          width: 150,
+                          selected: _numberOfQuestions == _totalQuestions,
+                          onTap: () {
+                            setState(() {
+                              _numberOfQuestions = _totalQuestions;
+                            });
+                          },
+                        ),
+
+                      ],
+                    ),
+                  ),
+
+
+            const SizedBox(height: 10),
+
+                  PracticeSummaryCard(
+                    questions: _numberOfQuestions,
+                    time: _numberOfQuestions == _totalQuestions
+                        ? "∞"
+                        : _estimatedStudyTime(),
+                    goal: _studyGoal(),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  PracticeStartButton(
+                    onPressed: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuestionScreen(
+                            numberOfQuestions: _numberOfQuestions,
+                            examSeconds: _practiceSeconds(),
+                            isMockExam: false,
+                            practiceFilter: PracticeFilter(
+                              mode: _practiceMode,
+                              domain: _selectedDomain,
+                              difficulty: _selectedDifficulty,
+                              questionType: _selectedQuestionType,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      );
 
-                    const SizedBox(height: 16),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Questions"),
-                        Text(
-                          "$_numberOfQuestions",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Estimated Time"),
-                        Text(
-                          _numberOfQuestions == _totalQuestions
-                              ? "No Time Limit"
-                              : _estimatedStudyTime(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Goal"),
-                        Text(
-                          _studyGoal(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-
-              onPressed: () {
-
-
-                Navigator.push(
-
-                  context,
-
-                  MaterialPageRoute(
-
-                    builder: (context) => QuestionScreen(
-
-                      numberOfQuestions: _numberOfQuestions,
-
-                      examSeconds: _practiceSeconds(),
-
-                      isMockExam: false,
-
-                      practiceFilter: PracticeFilter(
-
-                        mode: _practiceMode,
-
-                        domain: _selectedDomain,
-
-                        difficulty: _selectedDifficulty,
-
-                        questionType: _selectedQuestionType,
-
-                      ),
-
-                    ),
-
+                    },
                   ),
-
-                );
-
-
-              },
-
-
-              child: const Text(
-
-                "START PRACTICE",
-
-              ),
-
-            ),
 
 
               ],

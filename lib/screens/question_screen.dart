@@ -5,6 +5,7 @@ import '../models/question.dart';
 import '../models/practice_filter.dart';
 import '../services/question_service.dart';
 import '../services/history_service.dart';
+import '../services/practice_history_service.dart';
 import '../models/exam_result.dart';
 import '../models/domain_result.dart';
 import 'result_screen.dart';
@@ -55,6 +56,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final QuestionService _questionService = QuestionService();
 
   final HistoryService _historyService = HistoryService();
+
+  final PracticeHistoryService _practiceHistoryService =
+  PracticeHistoryService();
 
   final IncorrectQuestionsService _incorrectQuestionsService =
   IncorrectQuestionsService();
@@ -834,7 +838,11 @@ try {
           "DOMAINS COUNT: ${result.domainResults.length}"
       );
 
-      await _historyService.saveResult(result);
+      if (widget.isMockExam) {
+        await _historyService.saveResult(result);
+      } else {
+        await _practiceHistoryService.saveResult(result);
+      }
 
 
       for (var domain in result.domainResults) {
@@ -901,6 +909,47 @@ try {
 
   }
 
+  Widget _buildChip({
+    required IconData icon,
+    required String text,
+    required Color background,
+    required Color color,
+  }) {
+
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+
+          Icon(
+            icon,
+            size: 20,
+            color: color,
+          ),
+
+          const SizedBox(width: 8),
+
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
 
 
   Widget answerButton(String letter, String answer) {
@@ -916,89 +965,145 @@ try {
     );
 
 
-    Color buttonColor = Colors.grey.shade200;
-
+    Color buttonColor = Colors.white;
 
     if (_answered) {
 
       if (isCorrect) {
 
-        buttonColor = Colors.green;
+        buttonColor = const Color(0xFFE9F9EE);
 
       } else if (isSelected) {
 
-        buttonColor = Colors.red;
+        buttonColor = const Color(0xFFFFECEC);
 
       }
 
     } else if (isSelected) {
 
-      buttonColor = Colors.blue;
+      buttonColor = const Color(0xFFEAF4FF);
 
     }
 
 
 
-    return SizedBox(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(22),
+          onTap: _answered
+              ? null
+              : () async {
 
-      width: double.infinity,
+            setState(() {
 
-      child: ElevatedButton(
+              if (question.questionFormat == "singleChoice") {
 
-        style: ButtonStyle(
+                _selectedAnswers
+                  ..clear()
+                  ..add(letter);
 
-          backgroundColor:
-          WidgetStateProperty.all(buttonColor),
+                _userAnswers[question.id] = {letter};
 
-          foregroundColor:
-          WidgetStateProperty.all(Colors.black),
+              } else {
 
-        ),
+                final maxAnswers = question.correctAnswers.length;
 
+                if (_selectedAnswers.contains(letter)) {
+                  _selectedAnswers.remove(letter);
+                } else if (_selectedAnswers.length < maxAnswers) {
+                  _selectedAnswers.add(letter);
+                }
 
-        onPressed: _answered
-            ? null
-            : () async {
-
-          setState(() {
-
-            if (question.questionFormat == "singleChoice") {
-
-
-              _selectedAnswers
-                ..clear()
-                ..add(letter);
-
-              _userAnswers[question.id] = {letter};
-
-            } else {
-
-              final maxAnswers = question.correctAnswers.length;
-
-              if (_selectedAnswers.contains(letter)) {
-                _selectedAnswers.remove(letter);
-              } else if (_selectedAnswers.length < maxAnswers) {
-                _selectedAnswers.add(letter);
+                _userAnswers[question.id] =
+                Set<String>.from(_selectedAnswers);
               }
 
-              _userAnswers[question.id] = Set<String>.from(_selectedAnswers);
+            });
 
-            }
+            await _saveMockExamSession();
+          },
+          child: Ink(
+            decoration: BoxDecoration(
+              color: buttonColor,
+              borderRadius: BorderRadius.circular(22),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  spreadRadius: -6,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+              border: Border.all(
+                color: _answered
+                    ? (isCorrect
+                    ? const Color(0xFF26A65B)
+                    : (isSelected
+                    ? const Color(0xFFE74C3C)
+                    : const Color(0xFFE8EEF7)))
+                    : (isSelected
+                    ? const Color(0xFF2D86FF)
+                    : const Color(0xFFE8EEF7)),
+                width: 2,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-          });
-          await _saveMockExamSession();
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        letter,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF173B7A),
+                        ),
+                      ),
+                    ),
+                  ),
 
-        },
+                  const SizedBox(width: 18),
 
+                  Expanded(
+                    child: Text(
+                      answer,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Color(0xFF173B7A),
+                      ),
+                    ),
+                  ),
 
-        child: Text(
-
-          "$letter) $answer",
-
+                  if (_answered)
+                    Icon(
+                      isCorrect
+                          ? Icons.check_circle
+                          : (isSelected
+                          ? Icons.cancel
+                          : Icons.circle_outlined),
+                      color: isCorrect
+                          ? const Color(0xFF26A65B)
+                          : const Color(0xFFE74C3C),
+                    ),
+                ],
+              ),
+            ),
+          ),
         ),
-
       ),
-
     );
 
   }
@@ -1010,8 +1115,12 @@ try {
 
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF6F9FE),
 
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
 
         title: const Text(
           "Practice Questions",
@@ -1068,7 +1177,24 @@ try {
       ),
 
 
-      body: SafeArea(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFEAF4FF),
+                Color(0xFFF6F9FE),
+                Colors.white,
+              ],
+              stops: [
+                0,
+                .22,
+                .45,
+              ],
+            ),
+          ),
+          child: SafeArea(
 
         child: _questions.isEmpty
 
@@ -1092,108 +1218,221 @@ try {
             children: [
 
 
-              Text(
-
-                "Question ${_currentQuestionIndex + 1} of ${_questions.length}",
-
-                style: const TextStyle(
-
-                  fontSize: 16,
-
-                  fontWeight: FontWeight.bold,
-
+              Container(
+                padding: const EdgeInsets.all(22),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 30,
+                      spreadRadius: -8,
+                      offset: const Offset(0, 14),
+                    ),
+                  ],
                 ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-              ),
-
-              const SizedBox(height: 10),
-
-              LinearProgressIndicator(
-
-                value:
-                (_currentQuestionIndex + 1) /
-                    _questions.length,
-
-                minHeight: 8,
-
-              ),
-
-              const SizedBox(height: 10),
-
-              InkWell(
-                onTap: goToExamReview,
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.assignment,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        "Answered: ${answeredQuestions()} / ${_questions.length}",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.underline,
+                    Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(22),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF63B4FF),
+                            Color(0xFF2D86FF),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                      child: const Icon(
+                        Icons.track_changes_rounded,
+                        color: Colors.white,
+                        size: 38,
+                      ),
+                    ),
+
+                    const SizedBox(width: 18),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Text(
+                            "Question ${_currentQuestionIndex + 1} of ${_questions.length}",
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF173B7A),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: SizedBox(
+                              height: 10,
+                              child: LinearProgressIndicator(
+                                value:
+                                (_currentQuestionIndex + 1) /
+                                    _questions.length,
+                                color: const Color(0xFF2D86FF),
+                                backgroundColor: const Color(0xFFE7EEF8),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          InkWell(
+                            onTap: goToExamReview,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.assignment_outlined,
+                                  size: 18,
+                                  color: Color(0xFF74829C),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "Answered ${answeredQuestions()} / ${_questions.length}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF74829C),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    Column(
+                      children: [
+
+                        Text(
+                          "${(((_currentQuestionIndex + 1) / _questions.length) * 100).round()}%",
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2D86FF),
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Text(
+                          (!widget.isMockExam && remainingSeconds < 0)
+                              ? "--"
+                              : formatTime(remainingSeconds),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF74829C),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
 
-              const SizedBox(height: 10),
 
 
-              const SizedBox(height: 10),
+
+
 
 
 
               if (!widget.isMockExam) ...[
 
-                Text(
-                  "Domain: ${_questions[_currentQuestionIndex].domain}",
-                ),
+                const SizedBox(height: 10),
 
+                Row(
+                  children: [
 
-                Text(
-                  "Difficulty: ${_questions[_currentQuestionIndex].difficulty}",
-                ),
+                    Expanded(
+                      child: _buildChip(
+                        icon: Icons.groups_rounded,
+                        text: _questions[_currentQuestionIndex].domain,
+                        background: const Color(0xFFEAF4FF),
+                        color: const Color(0xFF2D86FF),
+                      ),
+                    ),
 
+                    const SizedBox(width: 10),
 
-                Text(
-                  "Format: ${_questions[_currentQuestionIndex].questionFormat}",
+                    Expanded(
+                      child: _buildChip(
+                        icon: Icons.speed_rounded,
+                        text: _questions[_currentQuestionIndex].difficulty,
+                        background: const Color(0xFFE9F9EE),
+                        color: const Color(0xFF26A65B),
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    Expanded(
+                      child: _buildChip(
+                        icon: Icons.list_alt_rounded,
+                        text: _questions[_currentQuestionIndex].questionFormat,
+                        background: const Color(0xFFF1EBFF),
+                        color: const Color(0xFF7B46E3),
+                      ),
+                    ),
+
+                  ],
                 ),
 
               ],
 
 
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
-
-
-              Text(
-
-                _questions[_currentQuestionIndex].question,
-
-                style: const TextStyle(
-
-                  fontSize: 22,
-
-                  fontWeight: FontWeight.bold,
-
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(26),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 30,
+                      spreadRadius: -8,
+                      offset: const Offset(0, 14),
+                    ),
+                  ],
                 ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
+
+
+                    Text(
+                      _questions[_currentQuestionIndex].question,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        height: 1.6,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF173B7A),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
-
-
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
 
 
@@ -1224,25 +1463,44 @@ try {
 
               if (!widget.isMockExam)
 
-                Center(
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 58,
+                    child: ElevatedButton.icon(
 
-                  child: ElevatedButton(
+                      onPressed: _answered
+                          ? null
+                          : (_selectedAnswers.length ==
+                          _questions[_currentQuestionIndex]
+                              .correctAnswers
+                              .length
+                          ? checkAnswer
+                          : null),
 
-                    onPressed: _answered
-                        ? null
-                        : (_selectedAnswers.length ==
-                        _questions[_currentQuestionIndex]
-                            .correctAnswers
-                            .length
-                        ? checkAnswer
-                        : null),
+                      icon: const Icon(Icons.task_alt_rounded),
 
-                    child: const Text(
-                      "CHECK ANSWER",
+                      label: const Text(
+                        "Check Answer",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: const Color(0xFF2D86FF),
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: const Color(0xFFBFCDE4),
+                        disabledForegroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
                     ),
-
                   ),
-
                 ),
 
 
@@ -1250,80 +1508,141 @@ try {
               if (_resultMessage != null)
 
                 Padding(
-
-                  padding: const EdgeInsets.only(top: 20),
-
-                  child: Text(
-
-                    _resultMessage!,
-
-                    style: const TextStyle(
-
-                      fontSize: 18,
-
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: _resultMessage!.startsWith("✅")
+                          ? const Color(0xFFE9F9EE)
+                          : const Color(0xFFFFF1F1),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: _resultMessage!.startsWith("✅")
+                            ? const Color(0xFF26A65B)
+                            : const Color(0xFFE74C3C),
+                      ),
                     ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
+                        Icon(
+                          _resultMessage!.startsWith("✅")
+                              ? Icons.check_circle_rounded
+                              : Icons.cancel_rounded,
+                          size: 34,
+                          color: _resultMessage!.startsWith("✅")
+                              ? const Color(0xFF26A65B)
+                              : const Color(0xFFE74C3C),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        Expanded(
+                          child: Text(
+                            _resultMessage!,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              height: 1.6,
+                              color: Color(0xFF173B7A),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-
                 ),
 
 
 
-              const SizedBox(height: 20),
 
-
+              const SizedBox(height: 10),
 
               Row(
-
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                 children: [
 
-                  ElevatedButton(
+                  Expanded(
+                    child: SizedBox(
+                      height: 56,
+                      child: OutlinedButton.icon(
 
-                    onPressed: _currentQuestionIndex > 0
-                        ? previousQuestion
-                        : null,
+                        onPressed: _currentQuestionIndex > 0
+                            ? previousQuestion
+                            : null,
 
-                    child: const Text(
-                      "PREVIOUS",
+                        icon: const Icon(Icons.arrow_back_rounded),
+
+                        label: const Text(
+                          "Previous",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF2D86FF),
+                          side: const BorderSide(
+                            color: Color(0xFF2D86FF),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                      ),
                     ),
-
                   ),
 
+                  const SizedBox(width: 16),
 
-                  ElevatedButton(
+                  Expanded(
+                    child: SizedBox(
+                      height: 56,
+                      child: ElevatedButton.icon(
 
-                    onPressed: widget.isMockExam
-                        ? (_currentQuestionIndex == _questions.length - 1
-                        ? goToExamReview
-                        : () async {
-                      if (_cameFromReview) {
-                        _cameFromReview = false;
-                        await goToExamReview();
-                      } else {
-                        await nextQuestion();
-                      }
-                    })
+                        onPressed: widget.isMockExam
+                            ? (_currentQuestionIndex == _questions.length - 1
+                            ? goToExamReview
+                            : () async {
+                          if (_cameFromReview) {
+                            _cameFromReview = false;
+                            await goToExamReview();
+                          } else {
+                            await nextQuestion();
+                          }
+                        })
+                            : (_currentQuestionIndex == _questions.length - 1 && _answered
+                            ? finishExam
+                            : (_answered ? nextQuestion : null)),
 
-                        : (_currentQuestionIndex == _questions.length - 1 && _answered
-                        ? finishExam
-                        : (_answered ? nextQuestion : null)),
+                        icon: Icon(
+                          _currentQuestionIndex == _questions.length - 1
+                              ? Icons.flag_circle_rounded
+                              : Icons.arrow_forward_rounded,
+                        ),
 
-                    child: Text(
+                        label: Text(
+                          _currentQuestionIndex == _questions.length - 1
+                              ? "Finish"
+                              : "Next",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
 
-                      _currentQuestionIndex == _questions.length - 1
-
-                          ? "FINISH EXAM"
-
-                          : "NEXT",
-
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: const Color(0xFF2D86FF),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                      ),
                     ),
-
                   ),
 
                 ],
-
               ),
 
 
@@ -1333,8 +1652,8 @@ try {
 
         ),
 
-      ),
-
+          ),
+        ),
     );
 
   }
