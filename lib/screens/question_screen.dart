@@ -1127,8 +1127,10 @@ try {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
 
-        title: const Text(
-          "Practice Questions",
+        title: Text(
+          widget.isMockExam
+              ? "Mock Exam"
+              : "Practice Questions",
         ),
 
         actions: [
