@@ -83,17 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _refreshStatistics() async {
-    final attempts = await QuestionAttemptService().getAttempts();
 
-    if (!mounted) return;
-
-    setState(() {
-      _statistics = DashboardStatisticsService(
-        attempts: attempts,
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

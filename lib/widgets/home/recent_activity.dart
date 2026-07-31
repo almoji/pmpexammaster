@@ -246,11 +246,7 @@ class _ActivityItem extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: color,
-                  size: 22,
-                ),
+
               ],
             ),
           ],

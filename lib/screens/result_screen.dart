@@ -53,10 +53,7 @@ class ResultScreen extends StatelessWidget {
     final screenTitle =
     isMockExam ? "Exam Result" : "Practice Result";
 
-    final resultTitle =
-    isMockExam ? "PMP Exam Result" : "Practice Result";
-
-    final historyButton =
+     final historyButton =
     isMockExam ? "VIEW MOCK HISTORY" : "VIEW PRACTICE HISTORY";
 
 

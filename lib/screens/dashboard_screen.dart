@@ -208,18 +208,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       appBar: AppBar(
 
-        title:
-        const Text(
-            "PMP Dashboard"
-        ),
+        elevation: 0,
+
+        backgroundColor: Colors.transparent,
+
+        surfaceTintColor: Colors.transparent,
 
         centerTitle: true,
+
+        title: const Text(
+
+          "PMP Dashboard",
+
+          style: TextStyle(
+
+            color: Color(0xFF173B7A),
+
+            fontWeight: FontWeight.bold,
+
+          ),
+
+        ),
 
       ),
 
 
 
-      body: loading
+        body: Container(
+
+          decoration: const BoxDecoration(
+
+            gradient: LinearGradient(
+
+              begin: Alignment.topCenter,
+
+              end: Alignment.bottomCenter,
+
+              colors: [
+
+                Color(0xFFEAF4FF),
+
+                Color(0xFFF6F9FE),
+
+                Colors.white,
+
+              ],
+
+              stops: [
+
+                0,
+
+                .22,
+
+                .45,
+
+              ],
+
+            ),
+
+          ),
+
+          child: loading
 
 
           ? const Center(
@@ -244,126 +293,184 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
 
-            Card(
+            Container(
 
-              elevation:4,
+              width: double.infinity,
 
-              child:
-              Padding(
+              padding: const EdgeInsets.fromLTRB(22, 14, 22, 14),
 
-                padding:
-                const EdgeInsets.all(20),
+              decoration: BoxDecoration(
 
+                color: Colors.white,
 
-                child:
-                Column(
+                borderRadius: BorderRadius.circular(26),
 
-                  children: [
+                boxShadow: [
 
+                  BoxShadow(
 
-                    const Text(
+                    color: Colors.black.withValues(alpha: 0.05),
 
-                      "Progress",
+                    blurRadius: 25,
 
-                      style:
-                      TextStyle(
+                    spreadRadius: -8,
 
-                        fontSize:22,
+                    offset: const Offset(0, 12),
 
-                        fontWeight:
-                        FontWeight.bold,
+                  ),
 
-                      ),
+                ],
 
-                    ),
+              ),
 
+              child: Column(
 
+                crossAxisAlignment: CrossAxisAlignment.start,
 
-                    const SizedBox(height:20),
-
+                children: [
 
 
-                    SizedBox(
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
 
-                      height:150,
+                      SizedBox(
 
-                      width:150,
+                        width: 190,
 
+                        height: 190,
 
-                      child:
-                      Stack(
+                        child: Stack(
 
-                        alignment:
-                        Alignment.center,
+                          alignment: Alignment.center,
 
+                          children: [
 
-                        children: [
+                            SizedBox(
 
+                              width: 140,
 
-                          CircularProgressIndicator(
+                              height: 140,
 
-                            value:
-                            averageScore / 100,
+                              child: CircularProgressIndicator(
 
+                                value: averageScore / 100,
 
-                            strokeWidth:12,
+                                strokeWidth: 18,
 
-                          ),
+                                backgroundColor: const Color(0xFFE9EFF8),
 
+                                color: const Color(0xFF3D73F6),
 
-
-                          Text(
-
-                            "${averageScore.round()}%",
-
-                            style:
-                            const TextStyle(
-
-                              fontSize:30,
-
-                              fontWeight:
-                              FontWeight.bold,
+                              ),
 
                             ),
 
-                          )
+                            RichText(
 
+                              text: TextSpan(
 
-                        ],
+                                children: [
+
+                                  TextSpan(
+
+                                    text: averageScore.round().toString(),
+
+                                    style: const TextStyle(
+
+                                      fontSize: 42,
+
+                                      fontWeight: FontWeight.bold,
+
+                                      color: Color(0xFF173B7A),
+
+                                    ),
+
+                                  ),
+
+                                  const TextSpan(
+
+                                    text: "%",
+
+                                    style: TextStyle(
+
+                                      fontSize: 22,
+
+                                      fontWeight: FontWeight.bold,
+
+                                      color: Color(0xFF173B7A),
+
+                                    ),
+
+                                  ),
+
+                                ],
+
+                              ),
+
+                            ),
+
+                          ],
+
+                        ),
 
                       ),
 
-                    ),
+                      const SizedBox(width: 10),
 
+                      Expanded(
 
+                        child: Column(
 
-                    const SizedBox(height:20),
+                          crossAxisAlignment: CrossAxisAlignment.start,
 
+                          children: [
 
+                            Text(
 
-                    Text(
+                              "$status 🚀",
 
-                      status,
+                              style: TextStyle(
 
-                      style:
-                      TextStyle(
+                                fontSize: 22,
 
-                        fontSize:22,
+                                fontWeight: FontWeight.bold,
 
-                        fontWeight:
-                        FontWeight.bold,
+                                color: statusColor,
 
-                        color:
-                        statusColor,
+                              ),
+
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            const Text(
+
+                              "Keep going!\nYou're almost there.",
+
+                              style: TextStyle(
+
+                                fontSize: 16,
+
+                                height: 1.5,
+
+                                color: Color(0xFF74829C),
+
+                              ),
+
+                            ),
+
+                          ],
+
+                        ),
 
                       ),
 
-                    )
+                    ],
 
+                  ),
 
-                  ],
-
-                ),
+                ],
 
               ),
 
@@ -372,7 +479,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
 
-            const SizedBox(height:20),
+            const SizedBox(height:5),
 
 
 
@@ -395,7 +502,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
 
             Row(
               children: [
@@ -417,9 +524,151 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             const SizedBox(height: 10),
 
-            _infoCard(
-              "📝 Questions Practiced",
-              "${attempts.length}",
+            Container(
+
+              width: double.infinity,
+
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
+
+              decoration: BoxDecoration(
+
+                borderRadius: BorderRadius.circular(24),
+
+                gradient: const LinearGradient(
+
+                  begin: Alignment.topLeft,
+
+                  end: Alignment.bottomRight,
+
+                  colors: [
+
+                    Color(0xFFF3EEFF),
+
+                    Color(0xFFEAF4FF),
+
+                  ],
+
+                ),
+
+                boxShadow: [
+
+                  BoxShadow(
+
+                    color: Colors.black.withValues(alpha: 0.05),
+
+                    blurRadius: 22,
+
+                    spreadRadius: -6,
+
+                    offset: const Offset(0, 10),
+
+                  ),
+
+                ],
+
+              ),
+
+              child: Row(
+
+                children: [
+
+                  Expanded(
+
+                    child: Column(
+
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+
+                        const Text(
+
+                          "Questions Practiced",
+
+                          style: TextStyle(
+
+                            fontSize: 15,
+
+                            color: Color(0xFF74829C),
+
+                            fontWeight: FontWeight.w600,
+
+                          ),
+
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Text(
+
+                          "${attempts.length}",
+
+                          style: const TextStyle(
+
+                            fontSize: 34,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Color(0xFF173B7A),
+
+                          ),
+
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        const Text(
+
+                          "Total questions answered",
+
+                          style: TextStyle(
+
+                            fontSize: 14,
+
+                            color: Color(0xFF74829C),
+
+                          ),
+
+                        ),
+
+                      ],
+
+                    ),
+
+                  ),
+
+                  Container(
+
+                    width: 72,
+
+                    height: 72,
+
+                    decoration: BoxDecoration(
+
+                      color: Colors.white.withValues(alpha: 0.75),
+
+                      shape: BoxShape.circle,
+
+                    ),
+
+                    child: const Icon(
+
+                      Icons.menu_book_rounded,
+
+                      color: Color(0xFF6C4CF7),
+
+                      size: 36,
+
+                    ),
+
+                  ),
+
+                ],
+
+              ),
+
             ),
 
             const SizedBox(height: 30),
@@ -439,9 +688,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             ...stats.domainStatistics.values.map((domain) {
 
-              return Padding(
+              Color progressColor;
+              Color percentageColor;
+              Color badgeColor;
 
-                padding: const EdgeInsets.only(bottom: 15),
+              switch (domain.domain) {
+
+                case "People":
+                  progressColor = const Color(0xFF8B5CF6);
+                  percentageColor = const Color(0xFF8B5CF6);
+                  badgeColor = const Color(0xFFF5F0FF);
+                  break;
+
+                case "Business Environment":
+                  progressColor = const Color(0xFFFF9800);
+                  percentageColor = const Color(0xFFFF9800);
+                  badgeColor = const Color(0xFFFFF7E8);
+                  break;
+
+                default:
+                  progressColor = const Color(0xFF2D86FF);
+                  percentageColor = const Color(0xFF2D86FF);
+                  badgeColor = const Color(0xFFEAF4FF);
+
+              }
+
+              return Container(
+
+                margin: const EdgeInsets.only(bottom: 12),
+
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 18,
+                ),
+
+                decoration: BoxDecoration(
+
+                  color: badgeColor.withValues(alpha: 0.35),
+
+                  borderRadius: BorderRadius.circular(20),
+
+                  border: Border.all(
+
+                    color: badgeColor,
+
+                    width: 1.2,
+
+                  ),
+
+                ),
 
                 child: Column(
 
@@ -449,15 +744,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   children: [
 
-                    Text(
+                    Row(
 
-                      "${domain.domain} (${domain.percentage.round()}%)",
+                      children: [
 
-                      style: const TextStyle(
+                        Text(
 
-                        fontWeight: FontWeight.bold,
+                          domain.domain,
 
-                        fontSize: 16,
+                          style: const TextStyle(
+
+                            fontSize: 17,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Color(0xFF173B7A),
+
+                          ),
+
+                        ),
+
+                        const Spacer(),
+
+                        Container(
+
+                          padding: const EdgeInsets.symmetric(
+
+                            horizontal: 10,
+
+                            vertical: 4,
+
+                          ),
+
+                          decoration: BoxDecoration(
+
+                            color: badgeColor,
+
+                            borderRadius: BorderRadius.circular(20),
+
+                          ),
+
+                          child: Text(
+
+                            "${domain.percentage.round()}%",
+
+                            style: TextStyle(
+
+                              color: percentageColor,
+
+                              fontWeight: FontWeight.bold,
+
+                            ),
+
+                          ),
+
+                        ),
+
+                      ],
+
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    ClipRRect(
+
+                      borderRadius: BorderRadius.circular(10),
+
+                      child: LinearProgressIndicator(
+
+                        value: domain.percentage / 100,
+
+                        minHeight: 12,
+
+                        backgroundColor: const Color(0xFFEAF1FB),
+
+                        valueColor: AlwaysStoppedAnimation<Color>(progressColor),
 
                       ),
 
@@ -465,27 +826,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     const SizedBox(height: 6),
 
-                    LinearProgressIndicator(
+                    Align(
 
-                      value: domain.percentage / 100,
+                      alignment: Alignment.centerLeft,
 
-                      minHeight: 10,
+                      child: Container(
 
-                    ),
+                        padding: const EdgeInsets.symmetric(
 
-                    const SizedBox(height: 6),
+                          horizontal: 12,
 
-                    Text(
+                          vertical: 6,
 
-                      getDomainLevel(domain.percentage),
+                        ),
 
-                      style: TextStyle(
+                        decoration: BoxDecoration(
 
-                        color: domain.percentage >= 70
-                            ? Colors.green
-                            : Colors.orange,
+                          color: badgeColor,
 
-                        fontWeight: FontWeight.w600,
+                          borderRadius: BorderRadius.circular(20),
+
+                        ),
+
+                        child: Text(
+
+                          getDomainLevel(domain.percentage),
+
+                          style: TextStyle(
+
+                            color: percentageColor,
+
+                            fontWeight: FontWeight.bold,
+
+                            fontSize: 13,
+
+                          ),
+
+                        ),
 
                       ),
 
@@ -532,58 +909,111 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height:20),
 
 
-            Text(
+            Container(
 
-              "PMP Readiness",
+              width: double.infinity,
 
-              style:
-              const TextStyle(
+              padding: const EdgeInsets.all(20),
 
-                fontSize:18,
+              decoration: BoxDecoration(
 
-                fontWeight:
-                FontWeight.bold,
+                color: const Color(0xFFF7FAFF),
+
+                borderRadius: BorderRadius.circular(22),
+
+                border: Border.all(
+
+                  color: const Color(0xFFE7EEFA),
+
+                ),
+
+              ),
+
+              child: Column(
+
+                children: [
+
+                  const Text(
+
+                    "PMP Readiness",
+
+                    style: TextStyle(
+
+                      fontSize: 18,
+
+                      fontWeight: FontWeight.bold,
+
+                      color: Color(0xFF173B7A),
+
+                    ),
+
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  ClipRRect(
+
+                    borderRadius: BorderRadius.circular(10),
+
+                    child: LinearProgressIndicator(
+
+                      value: readinessScore / 100,
+
+                      minHeight: 12,
+
+                      backgroundColor: const Color(0xFFEAF1FB),
+
+                      valueColor: const AlwaysStoppedAnimation(
+
+                        Color(0xFF2D86FF),
+
+                      ),
+
+                    ),
+
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  Text(
+
+                    "${readinessScore.round()}%",
+
+                    style: const TextStyle(
+
+                      fontSize: 34,
+
+                      fontWeight: FontWeight.bold,
+
+                      color: Color(0xFF173B7A),
+
+                    ),
+
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  const Text(
+
+                    "Estimated exam readiness",
+
+                    style: TextStyle(
+
+                      color: Color(0xFF74829C),
+
+                      fontSize: 14,
+
+                    ),
+
+                  ),
+
+                ],
 
               ),
 
             ),
 
-
-            const SizedBox(height:10),
-
-
-            LinearProgressIndicator(
-
-              value: readinessScore / 100,
-
-              minHeight: 12,
-
-            ),
-
-
-            const SizedBox(height:8),
-
-
-            Text(
-
-              "${readinessScore.round()}%",
-
-              style:
-              const TextStyle(
-
-                fontSize:24,
-
-                fontWeight:
-                FontWeight.bold,
-
-              ),
-
-            ),
-
-
-
-
-            const SizedBox(height:10),
+            const SizedBox(height: 18),
 
 
 
@@ -598,6 +1028,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
                 :
+
+
+
 
             ListView.builder(
 
@@ -615,49 +1048,153 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   (context,index){
 
 
-                final result =
-                results[
-                results.length -
-                    1 -
-                    index
-                ];
+                    final sortedResults = [...results]
+                      ..sort((a, b) => b.date.compareTo(a.date));
+
+                    final result = sortedResults[index];
 
 
 
                 return Card(
 
+                  elevation: 0,
 
-                  child:
-                  ListTile(
+                  color: Colors.white,
+
+                  margin: const EdgeInsets.only(bottom: 12),
+
+                  shape: RoundedRectangleBorder(
+
+                    borderRadius: BorderRadius.circular(20),
+
+                    side: const BorderSide(
+
+                      color: Color(0xFFE7EEF8),
+
+                    ),
+
+                  ),
+
+                  child: ListTile(
+
+                    contentPadding: const EdgeInsets.symmetric(
+
+                      horizontal: 20,
+
+                      vertical: 8,
+
+                    ),
 
 
-                    leading:
-                    Icon(
+                    leading: Container(
 
-                      result.passed
+                      width: 48,
 
-                          ? Icons.check_circle
+                      height: 48,
 
-                          : Icons.cancel,
+                      decoration: BoxDecoration(
 
+                        color: result.passed
 
-                      color:
-                      result.passed
+                            ? const Color(0xFFEFFAF3)
 
-                          ? Colors.green
+                            : const Color(0xFFFFF2F2),
 
-                          : Colors.red,
+                        shape: BoxShape.circle,
+
+                      ),
+
+                      child: Icon(
+
+                        result.passed
+
+                            ? Icons.check_rounded
+
+                            : Icons.close_rounded,
+
+                        color: result.passed
+
+                            ? const Color(0xFF18B76A)
+
+                            : const Color(0xFFE5484D),
+
+                      ),
 
                     ),
 
 
 
-                    title:
-                    Text(
+                    title: Column(
 
-                      "${result.date.day}/"
-                          "${result.date.month}/"
-                          "${result.date.year}",
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+
+                        Text(
+
+                          "${result.date.day}/${result.date.month}/${result.date.year}",
+
+                          style: const TextStyle(
+
+                            fontSize: 16,
+
+                            fontWeight: FontWeight.bold,
+
+                            color: Color(0xFF173B7A),
+
+                          ),
+
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        Container(
+
+                          padding: const EdgeInsets.symmetric(
+
+                            horizontal: 10,
+
+                            vertical: 4,
+
+                          ),
+
+                          decoration: BoxDecoration(
+
+                            color: result.passed
+
+                                ? const Color(0xFFEFFAF3)
+
+                                : const Color(0xFFFFF2F2),
+
+                            borderRadius: BorderRadius.circular(20),
+
+                          ),
+
+                          child: Text(
+
+                            result.passed ? "PASSED" : "FAILED",
+
+                            style: TextStyle(
+
+                              fontSize: 11,
+
+                              fontWeight: FontWeight.bold,
+
+                              color: result.passed
+
+                                  ? const Color(0xFF18B76A)
+
+                                  : const Color(0xFFE5484D),
+
+                            ),
+
+                          ),
+
+                        ),
+
+                      ],
 
                     ),
 
@@ -670,17 +1207,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Text(
                           "${result.percentage}%",
                           style: const TextStyle(
+
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+
+                            fontSize: 28,
+
+                            color: Color(0xFF173B7A),
+
                           ),
                         ),
-                        Text(
-                          result.passed ? "PASSED" : "FAILED",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: result.passed ? Colors.green : Colors.red,
-                          ),
-                        ),
+
                       ],
                     ),
 
@@ -702,6 +1238,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       ),
 
+        ),
+
     );
 
   }
@@ -712,69 +1250,158 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _infoCard(String title, String value) {
 
+    IconData icon;
+    Color iconColor;
+    Color backgroundColor;
+    Color cardColor;
 
-    return Card(
+    switch (title) {
 
-      elevation:3,
+      case "✅ Correct":
+        icon = Icons.check_circle;
+        iconColor = const Color(0xFF18B76A);
+        backgroundColor = const Color(0xFFEFFAF3);
+        cardColor = const Color(0xFFEAFBF0);
+        break;
 
+      case "❌ Incorrect":
+        icon = Icons.cancel;
+        iconColor = const Color(0xFFE5484D);
+        backgroundColor = const Color(0xFFFFF2F2);
+        cardColor = const Color(0xFFFFEFEF);
+        break;
 
-      child:
-      Padding(
+      case "🎯 Accuracy":
+        icon = Icons.track_changes;
+        iconColor = const Color(0xFF7A4DFF);
+        backgroundColor = const Color(0xFFF5F0FF);
+        cardColor = const Color(0xFFF2ECFF);
+        break;
 
-        padding:
-        const EdgeInsets.all(16),
+      case "🏆 Best Score":
+        icon = Icons.emoji_events_rounded;
+        iconColor = const Color(0xFFFF9800);
+        backgroundColor = const Color(0xFFFFF7E8);
+        cardColor = const Color(0xFFFFF4DF);
+        break;
 
+      default:
+        icon = Icons.menu_book_rounded;
+        iconColor = const Color(0xFF2D86FF);
+        backgroundColor = const Color(0xFFEAF4FF);
+        cardColor = const Color(0xFFF7FAFF);
+    }
 
-        child:
-        Column(
+    return Container(
 
-          children: [
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 12,
+      ),
 
+      decoration: BoxDecoration(
 
-            Text(
+        color: cardColor,
 
-              title,
+        borderRadius: BorderRadius.circular(22),
 
-              style:
-              const TextStyle(
+        boxShadow: [
 
-                fontSize:16,
+          BoxShadow(
 
-              ),
+            color: Colors.black.withValues(alpha: 0.05),
+
+            blurRadius: 22,
+
+            spreadRadius: -6,
+
+            offset: const Offset(0, 10),
+
+          ),
+
+        ],
+
+      ),
+
+      child: Column(
+
+        mainAxisAlignment: MainAxisAlignment.center,
+
+        children: [
+
+          Container(
+
+            width: 54,
+            height: 54,
+
+            decoration: BoxDecoration(
+
+              color: backgroundColor,
+
+              shape: BoxShape.circle,
 
             ),
 
+            child: Icon(
 
+              icon,
 
-            const SizedBox(height:8),
+              color: iconColor,
 
+              size: 28,
 
+            ),
 
-            Text(
+          ),
 
-              value,
+          const SizedBox(height: 0),
 
-              style:
-              const TextStyle(
+          Text(
 
-                fontSize:26,
+            value,
 
-                fontWeight:
-                FontWeight.bold,
+            style: const TextStyle(
 
-              ),
+              fontSize: 30,
 
-            )
+              fontWeight: FontWeight.bold,
 
+              color: Color(0xFF173B7A),
 
-          ],
+            ),
 
-        ),
+          ),
+
+          const SizedBox(height: 4),
+
+          Text(
+
+            title
+                .replaceAll("✅ ", "")
+                .replaceAll("❌ ", "")
+                .replaceAll("🎯 ", "")
+                .replaceAll("🏆 ", "")
+                .replaceAll("📝 ", ""),
+
+            textAlign: TextAlign.center,
+
+            style: const TextStyle(
+
+              fontSize: 14,
+
+              fontWeight: FontWeight.w600,
+
+              color: Color(0xFF74829C),
+
+            ),
+
+          ),
+
+        ],
 
       ),
 
     );
-
 
   }
 

@@ -14,9 +14,36 @@ class DailyCoachScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daily Coach'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        title: const Text(
+          "Daily Coach",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF173B7A),
+          ),
+        ),
       ),
-      body: FutureBuilder<DailyMission>(
+        body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFFEAF4FF),
+                  Color(0xFFF6F9FE),
+                  Colors.white,
+                ],
+                stops: [
+                  0,
+                  .22,
+                  .45,
+                ],
+              ),
+            ),
+            child: SafeArea(
+              child: FutureBuilder<DailyMission>(
         future: _dailyCoachService.getTodaysMission(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
@@ -38,102 +65,289 @@ class DailyCoachScreen extends StatelessWidget {
 
           return _buildContent(context, mission);
         },
-      ),
+              ),
+            ),
+        ),
     );
   }
 
   Widget _buildContent(BuildContext context, DailyMission mission) {
     return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
+
+        child: Container(
+
+          decoration: BoxDecoration(
+
+            color: Colors.white,
+
+            borderRadius: BorderRadius.circular(30),
+
+            boxShadow: [
+
+              BoxShadow(
+
+                color: Colors.black.withValues(alpha: 0.05),
+
+                blurRadius: 30,
+
+                spreadRadius: -8,
+
+                offset: const Offset(0, 14),
+
+              ),
+
+            ],
+
+          ),
+
+          child: Padding(
+
+            padding: const EdgeInsets.all(15),
+
+            child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
+
                 const Text(
-                  'Good morning 👋',
+                  "Your Daily Coach has prepared today's recommendation based on your recent performance.",
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Color(0xFF74829C),
+                    height: 1.5,
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 18),
 
-                const Text(
-                  "Your Daily Coach has prepared today's recommendation.",
-                ),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1EAFF),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: const Color(0xFFD5BFFF),
+                      width: 1.2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.deepPurple.withValues(alpha: 0.08),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                const SizedBox(height: 24),
+                      Row(
+                        children: [
 
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          mission.title,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFE7D9FF),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.auto_awesome_rounded,
+                              color: Color(0xFF7A4DFF),
+                              size: 28,
+                            ),
                           ),
+
+                          const SizedBox(width: 16),
+
+                          Expanded(
+                            child: Text(
+                              mission.title,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF173B7A),
+                              ),
+                            ),
+                          ),
+
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Text(
+                        mission.description,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Color(0xFF5F6C80),
+                          height: 1.5,
                         ),
-                        const SizedBox(height: 8),
-                        Text(mission.description),
-                        const SizedBox(height: 16),
-                        Text(
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE7D9FF),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
                           "+${mission.expectedReadinessGain}% Readiness",
                           style: const TextStyle(
-                            color: Colors.green,
+                            color: Color(0xFF7A4DFF),
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 18),
 
                 const Text(
                   "Why this mission?",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Color(0xFF173B7A),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
 
-                ...mission.reasons.map(
-                      (reason) => ListTile(
-                    leading: const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FBFF),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFFE6EEF8),
                     ),
-                    title: Text(reason),
-                    contentPadding: EdgeInsets.zero,
+                  ),
+                  child: Column(
+                    children: List.generate(
+                      mission.reasons.length,
+                          (index) {
+
+                        final reason = mission.reasons[index];
+
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            border: index == mission.reasons.length - 1
+                                ? null
+                                : const Border(
+                              bottom: BorderSide(
+                                color: Color(0xFFE9EEF7),
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+
+                              Container(
+                                width: 28,
+                                height: 28,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFE7D9FF),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.check,
+                                  size: 16,
+                                  color: Color(0xFF7A4DFF),
+                                ),
+                              ),
+
+                              const SizedBox(width: 14),
+
+                              Expanded(
+                                child: Text(
+                                  reason,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xFF4B5565),
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 18),
 
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
+                  height: 56,
+
+                  child: ElevatedButton(
+
                     onPressed: () => _startMission(context, mission),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: Text("START TODAY'S MISSION"),
+
+                    style: ElevatedButton.styleFrom(
+
+                      elevation: 0,
+
+                      backgroundColor: const Color(0xFF2D86FF),
+
+                      foregroundColor: Colors.white,
+
+                      shape: RoundedRectangleBorder(
+
+                        borderRadius: BorderRadius.circular(18),
+
+                      ),
+
                     ),
+
+                    child: const Row(
+
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+
+                        Icon(
+                          Icons.play_arrow_rounded,
+                          size: 22,
+                        ),
+
+                        SizedBox(width: 10),
+
+                        Text(
+                          "START TODAY'S MISSION",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: .3,
+                          ),
+                        ),
+
+                      ],
+
+                    ),
+
                   ),
+
                 ),
               ],
             ),
