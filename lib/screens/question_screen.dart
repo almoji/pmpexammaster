@@ -398,7 +398,12 @@ try {
     });
 
     await _loadFavoriteStatus();
-    await _checkForSavedMockExam();
+
+    if (widget.isMockExam) {
+      await _checkForSavedMockExam();
+    } else if (remainingSeconds > 0) {
+      startTimer();
+    }
   }
   Future<void> _loadFavoriteStatus() async {
     if (_questions.isEmpty) return;

@@ -1,4 +1,5 @@
 
+
 import '../models/question_attempt.dart';
 import '../models/domain_result.dart';
 
@@ -34,6 +35,7 @@ class DashboardStatisticsService {
     return attempts.length;
 
   }
+
   Map<String, DomainResult> get domainStatistics {
 
     final Map<String, DomainResult> domains = {};

@@ -66,11 +66,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+
     _loadStatistics();
   }
 
   Future<void> _loadStatistics() async {
     final attempts = await QuestionAttemptService().getAttempts();
+
+
 
     setState(() {
       _statistics = DashboardStatisticsService(
@@ -93,6 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
