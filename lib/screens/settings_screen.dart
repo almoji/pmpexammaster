@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/settings/premium_card.dart';
 import 'privacy_policy_screen.dart';
+import '../widgets/settings/developer_card.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -124,6 +125,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
 
+
+
               const SizedBox(height: 28),
 
               const Text(
@@ -135,6 +138,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
 
               const SizedBox(height: 28),
+
+
+
+              DeveloperCard(
+                onModeChanged: () {
+                  setState(() {});
+                },
+              ),
+
+              const SizedBox(height: 24),
 
               Container(
                 width: double.infinity,
