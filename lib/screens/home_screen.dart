@@ -12,6 +12,7 @@ import '../widgets/home/performance_overview.dart';
 import '../widgets/home/quick_actions.dart';
 import '../widgets/home/recent_activity.dart';
 import '../widgets/home/weakest_domain.dart';
+import '../widgets/ads/banner_ad_widget.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -112,14 +113,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: _sidePadding),
+            child: BannerAdWidget(),
+          ),
+
+          const SizedBox(height: 18),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
             child: QuickActions(),
           ),
 
-          const SizedBox(height: _sectionSpacing),
+          const SizedBox(height: 18),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: _sidePadding),
+            child: BannerAdWidget(),
+          ),
+
+          const SizedBox(height: 18),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
@@ -148,7 +163,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          const SizedBox(height: _sectionSpacing),
+          const SizedBox(height: 18),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: _sidePadding),
+            child: BannerAdWidget(),
+          ),
+
+          const SizedBox(height: 18),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
@@ -162,7 +184,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BottomBanner(),
           ),
 
-          const SizedBox(height: 80),
+          const SizedBox(height: 18),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: _sidePadding),
+            child: BannerAdWidget(),
+          ),
+
+          const SizedBox(height: 30),
         ],
       ),
     );

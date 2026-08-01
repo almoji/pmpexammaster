@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'question_screen.dart';
+import '../services/mock_exam_service.dart';
+import '../services/premium_service.dart';
+import '../widgets/premium/premium_upgrade_dialog.dart';
 
 class MockExamSetupScreen extends StatelessWidget {
   const MockExamSetupScreen({super.key});
@@ -227,7 +230,47 @@ class MockExamSetupScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+
+                            if (!PremiumService.isPremium) {
+
+                              final canStart =
+                              await MockExamService.canStartMockExam();
+
+                              if (!canStart) {
+
+                                if (!context.mounted) return;
+
+                                final upgraded = await showDialog<bool>(
+                                  context: context,
+                                  builder: (_) => const PremiumUpgradeDialog(
+                                    title: "Mock Exam Limit Reached",
+                                    message:
+                                    "Free users can take one Mock Exam every 15 days.\n\nUpgrade to Premium to unlock:",
+                                  ),
+                                );
+
+                                if (upgraded == true && context.mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const QuestionScreen(
+                                        numberOfQuestions: 5,
+                                        examSeconds: 600,
+                                        isMockExam: true,
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                return;
+                              }
+
+                              await MockExamService.registerMockExam();
+
+                            }
+
+                            if (!context.mounted) return;
 
                             Navigator.push(
                               context,

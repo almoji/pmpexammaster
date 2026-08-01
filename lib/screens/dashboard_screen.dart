@@ -7,6 +7,7 @@ import '../services/question_attempt_service.dart';
 import '../services/dashboard_statistics_service.dart';
 import '../services/exam_statistics_service.dart';
 import '../widgets/exam_trend_card.dart';
+import '../widgets/ads/banner_ad_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
 
@@ -671,7 +672,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
+
+            const BannerAdWidget(),
+
+            const SizedBox(height: 24),
 
             const Align(
               alignment: Alignment.centerLeft,
@@ -1013,10 +1018,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             ),
 
-            const SizedBox(height: 18),
+            const SizedBox(height: 24),
 
+            const BannerAdWidget(),
 
-
+            const SizedBox(height: 24),
 
             results.isEmpty
 

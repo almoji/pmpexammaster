@@ -7,6 +7,7 @@ import 'question_data_service.dart';
 
 
 
+
 class QuestionService {
 
   QuestionService({
@@ -34,7 +35,7 @@ class QuestionService {
 
 
     final List<dynamic> data =
-    await _questionDataService.loadQuestions();
+    await _questionDataService.loadQuestionsForCurrentUser();
 
     if (practiceFilter?.mode == "Incorrect Questions") {
       return await _incorrectQuestionsService.getQuestions();

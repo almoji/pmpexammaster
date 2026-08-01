@@ -4,6 +4,7 @@ import '../widgets/settings/premium_card.dart';
 import 'privacy_policy_screen.dart';
 import '../widgets/settings/developer_card.dart';
 import '../widgets/ads/banner_ad_widget.dart';
+import '../screens/terms_conditions_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -100,7 +101,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: const Color(0xFF7A4DFF),
                 title: "Terms & Conditions",
                 subtitle: "Read the terms of use",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TermsConditionsScreen(),
+                    ),
+                  );
+                },
               ),
 
               const SizedBox(height: 12),

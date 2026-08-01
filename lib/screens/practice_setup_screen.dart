@@ -11,6 +11,7 @@ import '../widgets/practice_setup/practice_summary_card.dart';
 import '../widgets/practice_setup/practice_start_button.dart';
 import '../widgets/practice_setup/practice_option_button.dart';
 import '../widgets/app_dropdown.dart';
+import '../widgets/ads/banner_ad_widget.dart';
 
 
 class PracticeSetupScreen extends StatefulWidget {
@@ -434,6 +435,10 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
                     },
                   ),
+
+                  const SizedBox(height: 24),
+
+                  const BannerAdWidget(),
 
 
               ],

@@ -5,6 +5,7 @@ import '../models/domain_result.dart';
 
 import 'history_screen.dart';
 import 'review_screen.dart';
+import '../widgets/ads/banner_ad_widget.dart';
 
 
 class ResultScreen extends StatelessWidget {
@@ -576,41 +577,29 @@ class ResultScreen extends StatelessWidget {
                     height: 56,
 
                     child: OutlinedButton(
-
                       onPressed: () {
-
                         Navigator.pop(context);
-
                       },
 
                       style: OutlinedButton.styleFrom(
-
                         foregroundColor: const Color(0xFF2D86FF),
-
                         side: const BorderSide(
                           color: Color(0xFFD8E4F8),
                           width: 1.3,
                         ),
-
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
-
                       ),
 
                       child: const Row(
-
                         mainAxisAlignment: MainAxisAlignment.center,
-
                         children: [
-
                           Icon(
                             Icons.home_rounded,
                             size: 22,
                           ),
-
                           SizedBox(width: 10),
-
                           Text(
                             "BACK TO HOME",
                             style: TextStyle(
@@ -618,15 +607,14 @@ class ResultScreen extends StatelessWidget {
                               fontSize: 15,
                             ),
                           ),
-
                         ],
-
                       ),
-
                     ),
-
                   ),
 
+                const SizedBox(height: 24),
+
+                const BannerAdWidget(),
 
               ],
               ),

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import '../services/premium_service.dart';
+
+
 
 class QuestionDataService {
 
@@ -82,6 +85,20 @@ class QuestionDataService {
     return allQuestions;
 
   }
+
+  Future<List<dynamic>> loadQuestionsForCurrentUser() async {
+    final questions = await loadQuestions();
+
+    if (PremiumService.isPremium) {
+      return questions;
+    }
+
+    return questions.where((question) {
+      final int id = question['id'] as int;
+      return id <= 1000;
+    }).toList();
+  }
+
 
   Future<int> getQuestionCount() async {
     final questions = await loadQuestions();

@@ -4,6 +4,8 @@ import '../../screens/dashboard_screen.dart';
 import '../../screens/daily_coach_screen.dart';
 import '../../screens/mock_exam_setup_screen.dart';
 import '../../screens/practice_setup_screen.dart';
+import '../../services/feature_gate.dart';
+import '../premium/premium_upgrade_dialog.dart';
 
 class QuickActions extends StatelessWidget {
   const QuickActions({super.key});
@@ -83,13 +85,31 @@ class QuickActions extends StatelessWidget {
               color1: const Color(0xFFA46DFF),
               color2: const Color(0xFF7B46E3),
               badge: "AI",
-              onTap: () {
+              onTap: () async {
+
+                if (!FeatureGate.advancedDailyCoach) {
+
+                  await showDialog(
+                    context: context,
+                    builder: (_) => const PremiumUpgradeDialog(
+                      title: "Daily Coach is a Premium Feature",
+                      message:
+                      "Unlock your personalized daily study plan with Premium.",
+                    ),
+                  );
+
+                  return;
+                }
+
+                if (!context.mounted) return;
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => DailyCoachScreen(),
                   ),
                 );
+
               },
             ),
           ],
