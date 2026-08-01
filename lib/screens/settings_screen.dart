@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/settings/premium_card.dart';
 import 'privacy_policy_screen.dart';
 import '../widgets/settings/developer_card.dart';
+import '../widgets/ads/banner_ad_widget.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -146,6 +147,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   setState(() {});
                 },
               ),
+
+              const SizedBox(height: 24),
+
+              const BannerAdWidget(),
 
               const SizedBox(height: 24),
 

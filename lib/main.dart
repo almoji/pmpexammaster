@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await MobileAds.instance.initialize();
+
   runApp(const PMPExamApp());
 }
 
@@ -15,9 +20,7 @@ class PMPExamApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PMP Exam Master',
-
       theme: AppTheme.lightTheme,
-
       home: const HomeScreen(),
     );
   }
