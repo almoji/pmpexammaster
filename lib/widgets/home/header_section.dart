@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/settings_screen.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});
@@ -35,6 +36,32 @@ class HeaderSection extends StatelessWidget {
                     child: Image.asset(
                       "assets/icon/logo_horizontal.png",
                       height: 80,
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  top: 0,
+                  right: 18,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.18),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.settings_rounded,
+                        color: Colors.white,
+                        size: 26,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SettingsScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
