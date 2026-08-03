@@ -12,6 +12,7 @@ import '../widgets/practice_setup/practice_start_button.dart';
 import '../widgets/practice_setup/practice_option_button.dart';
 import '../widgets/app_dropdown.dart';
 import '../widgets/ads/banner_ad_widget.dart';
+import '../widgets/premium/free_plan_card.dart';
 
 
 class PracticeSetupScreen extends StatefulWidget {
@@ -436,7 +437,14 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
+
+                  const FreePlanCard(
+                    message:
+                    "You're currently practicing from a curated collection of 1,000 PMP questions.",
+                  ),
+
+                  const SizedBox(height: 20),
 
                   const BannerAdWidget(),
 

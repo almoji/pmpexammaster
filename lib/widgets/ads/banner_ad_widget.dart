@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -21,8 +22,12 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
     if (PremiumService.isPremium) return;
 
+    final bannerId = kDebugMode
+        ? 'ca-app-pub-3940256099942544/6300978111'
+        : 'ca-app-pub-1119935061759497/5245109858';
+
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: bannerId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(

@@ -13,6 +13,8 @@ import '../widgets/home/quick_actions.dart';
 import '../widgets/home/recent_activity.dart';
 import '../widgets/home/weakest_domain.dart';
 import '../widgets/ads/banner_ad_widget.dart';
+import '../widgets/premium/free_plan_card.dart';
+import '../main.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -22,7 +24,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with RouteAware {
   static const double _sidePadding = 22;
   static const double _sectionSpacing = 26;
 
@@ -68,14 +70,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-
     _loadStatistics();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final route = ModalRoute.of(context);
+      if (route is PageRoute) {
+        routeObserver.subscribe(this, route);
+      }
+    });
   }
 
   Future<void> _loadStatistics() async {
     final attempts = await QuestionAttemptService().getAttempts();
-
-
 
     setState(() {
       _statistics = DashboardStatisticsService(
@@ -84,7 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
+  @override
+  void didPopNext() {
+    _loadStatistics();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const HeaderSection(),
 
           Transform.translate(
-            offset: const Offset(0, -42),
+            offset: const Offset(0, -24),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: _sidePadding,
@@ -120,21 +129,31 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BannerAdWidget(),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
             child: QuickActions(),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: _sidePadding),
+            child: const FreePlanCard(
+              message:
+              "You're using the Free Plan. Upgrade to Premium to unlock 10,000+ PMP questions, unlimited mock exams, AI Coach and an ad-free study experience.",
+            ),
+          ),
+
+          const SizedBox(height: 12),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
             child: BannerAdWidget(),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
@@ -163,14 +182,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
             child: BannerAdWidget(),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
@@ -184,16 +203,22 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BottomBanner(),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: _sidePadding),
             child: BannerAdWidget(),
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 12),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 }
