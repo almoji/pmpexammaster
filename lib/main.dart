@@ -10,7 +10,7 @@ RouteObserver<ModalRoute<void>>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await MobileAds.instance.initialize();
+  // await MobileAds.instance.initialize();
 
   runApp(const PMPExamApp());
 }

@@ -46,3 +46,7 @@ app.*.map.json
 
 # Gradle reports
 /android/build/
+
+# Android signing
+android/key.properties
+android/upload-keystore.jks
