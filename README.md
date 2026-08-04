@@ -1,17 +1,31 @@
-# pmp_exam_app
+# PMP Exam Master
 
-PMP Exam Preparation Application
+PMP Exam Master is a Flutter application designed to help professionals prepare for the Project Management Professional (PMP®) certification exam.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Practice exams
+- Mock exams
+- Performance statistics
+- Study history
+- Free and Premium plans
+- Google AdMob integration
+- Offline question database
 
-A few resources to get you started if this is your first Flutter project:
+## Technology
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Flutter
+- Dart
+- Android
+- Shared Preferences
+- FL Chart
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Status
+
+🚀 Currently in Google Play Closed Testing.
+
+## Privacy Policy
+
+The privacy policy is available in this repository:
+
+- privacy-policy.html
