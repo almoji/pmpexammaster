@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'services/admob_service.dart';
 
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
@@ -10,7 +10,7 @@ RouteObserver<ModalRoute<void>>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await MobileAds.instance.initialize();
+  await AdMobService.initialize();
 
   runApp(const PMPExamApp());
 }

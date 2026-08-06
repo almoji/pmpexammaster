@@ -3,6 +3,7 @@ import 'question_screen.dart';
 import '../services/mock_exam_service.dart';
 import '../services/premium_service.dart';
 import '../widgets/premium/premium_upgrade_dialog.dart';
+import '../services/ads_service.dart';
 
 class MockExamSetupScreen extends StatelessWidget {
   const MockExamSetupScreen({super.key});
@@ -271,6 +272,8 @@ class MockExamSetupScreen extends StatelessWidget {
                             }
 
                             if (!context.mounted) return;
+
+                            AdsService.resetSession();
 
                             Navigator.push(
                               context,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../services/premium_service.dart';
+import '../../services/ads_service.dart';
+
 
 class DeveloperCard extends StatefulWidget {
   final VoidCallback onModeChanged;
@@ -81,6 +83,18 @@ class _DeveloperCardState extends State<DeveloperCard> {
           ),
 
           const SizedBox(height: 18),
+
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () async {
+                await AdsService.showInterstitial();
+              },
+              child: const Text("🧪 Test Interstitial"),
+            ),
+          ),
+
+          const SizedBox(height: 12),
 
           SizedBox(
             width: double.infinity,

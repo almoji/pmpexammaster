@@ -16,6 +16,7 @@ import '../services/question_attempt_service.dart';
 import '../models/question_attempt.dart';
 import '../models/exam_mode.dart';
 import '../services/mock_exam_session_service.dart';
+import '../services/ads_service.dart';
 
 
 
@@ -518,6 +519,10 @@ try {
 
       await _incorrectQuestionsService.saveQuestion(
         _incorrectQuestions.last,
+      );
+
+      await AdsService.onQuestionAnswered(
+        currentQuestion: _currentQuestionIndex + 1,
       );
 
     }

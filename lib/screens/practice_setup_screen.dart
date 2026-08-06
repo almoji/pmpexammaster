@@ -13,6 +13,7 @@ import '../widgets/practice_setup/practice_option_button.dart';
 import '../widgets/app_dropdown.dart';
 import '../widgets/ads/banner_ad_widget.dart';
 import '../widgets/premium/free_plan_card.dart';
+import '../services/ads_service.dart';
 
 
 class PracticeSetupScreen extends StatefulWidget {
@@ -416,6 +417,8 @@ class _PracticeSetupScreenState extends State<PracticeSetupScreen> {
 
                   PracticeStartButton(
                     onPressed: () {
+
+                      AdsService.resetSession();
 
                       Navigator.push(
                         context,

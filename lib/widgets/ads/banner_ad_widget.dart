@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../services/premium_service.dart';
+import '../../services/admob_service.dart';
+import '../../services/ads_service.dart';
 
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key});
@@ -20,16 +20,13 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   void initState() {
     super.initState();
 
-    if (PremiumService.isPremium) return;
+    if (!AdsService.shouldShowBanner) {
+      return;
+    }
 
-    final bannerId = kDebugMode
-        ? 'ca-app-pub-3940256099942544/6300978111'
-        : 'ca-app-pub-1119935061759497/5245109858';
 
-    _bannerAd = BannerAd(
-      adUnitId: bannerId,
-      size: AdSize.banner,
-      request: const AdRequest(),
+
+    _bannerAd = AdMobService.createBannerAd(
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           setState(() {
@@ -53,7 +50,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (PremiumService.isPremium) {
+    if (!AdsService.shouldShowBanner) {
       return const SizedBox.shrink();
     }
 

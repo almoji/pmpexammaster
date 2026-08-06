@@ -226,18 +226,22 @@ class _ActionCard extends StatelessWidget {
 
                     const SizedBox(height: 6),
 
-                    Text(
-                      subtitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF74829C),
-                        height: 1.4,
+
+
+                    Expanded(
+                      child: Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF74829C),
+                          height: 1.4,
+                        ),
                       ),
                     ),
 
-                    const Spacer(),
+                    const SizedBox(height: 12),
 
                     Align(
                       alignment: Alignment.centerRight,
