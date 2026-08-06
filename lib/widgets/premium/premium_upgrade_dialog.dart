@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../services/purchase_service.dart';
+import '../../services/billing_service.dart';
 
 class PremiumUpgradeDialog extends StatelessWidget {
 
@@ -64,14 +64,20 @@ class PremiumUpgradeDialog extends StatelessWidget {
                 onPressed: () async {
 
                   final success =
-                  await PurchaseService.purchasePremium();
+                  await BillingService.buyPremium();
 
                   if (!context.mounted) return;
 
-                  Navigator.pop(context, success);
+                  if (success) {
+                    Navigator.pop(context, true);
+                  }
 
                 },
-                child: const Text("Upgrade to Premium"),
+                child: Text(
+                  BillingService.premiumProduct == null
+                      ? "Upgrade to Premium"
+                      : "Upgrade to Premium • ${BillingService.premiumProduct!.price}",
+                ),
               ),
             ),
 

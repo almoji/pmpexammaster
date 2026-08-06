@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'services/admob_service.dart';
+import 'services/billing_service.dart';
+import 'services/premium_service.dart';
 
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
@@ -9,6 +12,10 @@ RouteObserver<ModalRoute<void>>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await PremiumService.initialize();
+
+  await BillingService.initialize();
 
   await AdMobService.initialize();
 
@@ -24,11 +31,9 @@ class PMPExamApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PMP Exam Master',
       theme: AppTheme.lightTheme,
-
       navigatorObservers: [
         routeObserver,
       ],
-
       home: const HomeScreen(),
     );
   }
