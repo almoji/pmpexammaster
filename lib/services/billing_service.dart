@@ -55,7 +55,12 @@ class BillingService {
     }
 
     _products = await loadProducts();
+
     _startPurchaseListener();
+
+    // NUEVO
+    debugPrint('🔄 Restoring previous purchases...');
+    await instance.restorePurchases();
 
     debugPrint(
       '✅ Billing initialized (${_products.length} products)',
@@ -112,9 +117,15 @@ class BillingService {
               if (purchase.status == PurchaseStatus.purchased ||
                   purchase.status == PurchaseStatus.restored) {
 
-                debugPrint('✅ Premium unlocked');
+                debugPrint(
+                  '✅ Purchase received: ${purchase.productID}',
+                );
 
-                await PremiumService.unlockPremium();
+                if (purchase.productID == premiumProductId) {
+                  await PremiumService.refreshPremium(true);
+
+                  debugPrint('⭐ Premium unlocked');
+                }
 
                 if (purchase.pendingCompletePurchase) {
                   await instance.completePurchase(
@@ -140,6 +151,10 @@ class BillingService {
             );
           },
         );
+  }
+  static Future<void> restorePurchases() async {
+    debugPrint('🔄 Restoring purchases...');
+    await instance.restorePurchases();
   }
 
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/premium_service.dart';
-import '../../services/purchase_service.dart';
+import '../../services/billing_service.dart';
 
 class PremiumCard extends StatelessWidget {
   const PremiumCard({super.key});
@@ -9,22 +9,23 @@ class PremiumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> upgrade() async {
-      final success = await PurchaseService.purchasePremium();
+      final success = await BillingService.buyPremium();
 
       if (!context.mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            success
-                ? "Premium activated (Demo)"
-                : "Purchase failed",
+      if (!success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Unable to start purchase"),
           ),
-        ),
-      );
+        );
+      }
     }
 
-    if (PremiumService.isPremium) {
+return ValueListenableBuilder<bool>(
+valueListenable: PremiumService.premiumNotifier,
+  builder: (context, isPremium, _) {
+    if (isPremium) {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(22),
@@ -135,6 +136,7 @@ class PremiumCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 22),
+
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -157,8 +159,52 @@ class PremiumCard extends StatelessWidget {
               ),
             ),
           ),
+
+// <-- AÑADIR DESDE AQUÍ
+
+          const SizedBox(height: 12),
+
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                await BillingService.restorePurchases();
+
+                if (!context.mounted) return;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Restoring purchases...'
+                    ),
+                  ),
+                );
+
+              },
+              icon: const Icon(Icons.restore),
+              label: const Text('Restore Purchases'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                side: const BorderSide(
+                  color: Colors.white70,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+            ),
+          ),
+
+// <-- HASTA AQUÍ
+
         ],
       ),
     );
+
+},
+);
   }
 }
